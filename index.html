@@ -46,6 +46,7 @@
     var text00;
     var episode00;
     var episodeBack00;
+    var exit00;
 
     var game = new Phaser.Game(config);
 
@@ -58,6 +59,7 @@
         this.load.image('n00TroyVisited', 'assets/bomb.png');
         this.load.spritesheet('ship', 'assets/ship96.png', { frameWidth: 96, frameHeight: 96 });
         this.load.image('episodeBack', 'assets/episode-back.png');
+        this.load.image('exit', 'assets/exit.png');
     }
 
 // ------------------------------- Create -------------------------------------
@@ -81,10 +83,14 @@
         n00TroyVisited.disableBody(true, true);
         text00 = this.add.text(955, 290, 'Troy', { fontSize: '24px', fill: '#000'});
         text00.visible = 0;
+
         episode00 = this.add.container(600, 400);
         episodeBack00 = this.add.image(0, 0, 'episodeBack');
-        episode00.add([ episodeBack00 ]);
+        exit00 = this.add.image(370, 270, 'exit');
+        episode00.add([ episodeBack00, exit00 ]);
         episode00.setAlpha(0);
+        exit00.setInteractive();
+        exit00.on('clicked', sail00, this);
 
         // Player properties
         player.setBounce(0.2);
@@ -130,7 +136,14 @@
         });
 
         // Input Events
-        cursors = this.input.keyboard.createCursorKeys();
+        cursors = this.input.keyboard.createCursorKeys();    
+
+        //  If a Game Object is clicked on, this event is fired.
+        //  We can use it to emit the 'clicked' event on the game object itself.
+        this.input.on('gameobjectup', function (pointer, gameObject)
+        {
+            gameObject.emit('clicked', gameObject);
+        }, this);
 
         // Collisions
         this.physics.add.overlap(player, n00Troy, dock00, null, this);
@@ -176,6 +189,7 @@
 
 // ---------------------------- Functions -------------------------------------
 
+// Episode00
 function dock00(player, n00Troy)
 {
     if (stationNumber == 0) {
@@ -187,6 +201,10 @@ function dock00(player, n00Troy)
         episode00.setAlpha(0.8);
         stationNumber++;
     }
+}
+
+function sail00() {
+    episode00.setAlpha(0);
 }
 
 </script>
