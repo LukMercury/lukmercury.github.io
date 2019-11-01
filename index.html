@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
-    <title>The Odyssey</title>
+    <title>The Odyssey - Part 4</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <style type="text/css">
         body {
@@ -14,7 +14,7 @@
 
 <script type="text/javascript">
 
-// ------------------------------- Config -------------------------------------
+// =============================== Config =====================================
 
     var config = {
         type: Phaser.AUTO,
@@ -33,106 +33,147 @@
         }
     };
 
-// ------------------------------ Variables -----------------------------------
+// ============================== Variables ===================================
 
     var player;
     var cursors;
     var stationNumber = 0; // station along the way home
     var score = 0;
     var scoreText;
-    var youWereRight;
-    var youWereRightText;
-    var youWereWrong;
-    var youWereWrongText;
     var blockInput = false;
 
-    var n00Troy;
-    var n00TroyVisited;
-    var text00;
-    var episode00;
-    var episodeBack00;
-    var exit00;
-    var story001;
-    var story001Text;
-    var story001_Button1;
-    var story001_Button2;
-    var story001_Option1;
-    var story001_Option2;
-    var story001_Option1_Text;
-    var story001_Option2_Text;
+    var youWereRight ='Right';
+    var youWereRightText;
+    var youWereWrong = 'Wrong';
+    var youWereWrongText;
 
+    // Menu
+    var story = "Just Started";
+    var menu;
+    var menuBack;
+    var exit;
+    var wrongPlace = "Oh, poor Odysseus, you have lost your Way!\nMay Athene guide you!"
+    var athene;
+    var storyText;
+    var story_Button1;
+    var story_Button2;
+    var storyChoice1;
+    var storyChoice2;
+    var storyChoice1_Text;
+    var storyChoice2_Text;
+
+    // Map objects
+
+    // Player must visit places in the correct order
+    // Keep track of places to access them from functions
+    // (this works because objects are passed around by refrence)
+    var noOfPlaces = 1;
+    var i;
+    var itinerary = [];
+    var itineraryVisited = [];
+    var text = [];
+    var firstVisit = [];
+
+    // Stories
+    var stories = [
+    "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope.",
+    ]
+    var storyChoices1 = [
+    "Stay in Troy and become a King here."
+    ]
+    var storyChoices2 = [
+    "Sail away!"
+    ]
+
+    // Game
     var game = new Phaser.Game(config);
 
-// ------------------------------- Preload ------------------------------------
+// =============================== Preload ====================================
 
     function preload ()
     {
+
+// ------------------------------ Game ----------------------------------------
+
         this.load.image('map', 'assets/map.png');
-        this.load.image('n00Troy', 'assets/star.png');
-        this.load.image('n00TroyVisited', 'assets/bomb.png');
-        this.load.spritesheet('ship', 'assets/ship96.png', { frameWidth: 96, frameHeight: 96 });
-        this.load.image('episodeBack', 'assets/episode-back.png');
+        this.load.spritesheet('ship', 'assets/ship96.png', 
+            { frameWidth: 96, frameHeight: 96 });
+        this.load.image('menuBack', 'assets/menu_Background.png');
         this.load.image('exit', 'assets/exit.png');
         this.load.image('option', 'assets/option.png');
+        this.load.image('athene', 'assets/athene.png');
+
+// ----------------------------- Episodes -------------------------------------
+
+        this.load.image('n00Troy', 'assets/star.png');
+        this.load.image('n00TroyVisited', 'assets/troy.png');
     }
 
-// ------------------------------- Create -------------------------------------
+// =============================== Create =====================================
 
     function create ()
     {
-        // Add map
+
+// -------------------------------- Map ---------------------------------------
+
         this.add.image(600, 400, 'map');
 
-        // Add player
+// ---------------------------- Map Objects -----------------------------------
+        
+        // You get a penalty and a warning for stopping in the wrong order
+        for (i = 0; i < noOfPlaces; ++i)
+            firstVisit.push(true);
+
+        // Create new place
+        var n00Troy = this.physics.add.staticImage(940, 300, 'n00Troy');
+        var n00TroyVisited = this.physics.add.staticImage(960, 300, 
+            'n00TroyVisited');
+        n00TroyVisited.disableBody(true, true);
+        var text00 = this.add.text(1015, 290, 'Troy', 
+            { fontSize: '24px', fill: '#000'});
+        text00.visible = 0;
+        // Add place to itinerary
+        itinerary.push(n00Troy);
+        itineraryVisited.push(n00TroyVisited);
+        text.push(text00);
+
+// ------------------------------ Player --------------------------------------
+
         player = this.physics.add.sprite(880, 330, 'ship');
 
-        // Add map objects
+// ------------------------------- Menu ---------------------------------------
 
-        // Episode00
-        n00Troy = this.physics.add.staticImage(940, 300, 'n00Troy');
-        n00TroyVisited = this.physics.add.staticImage(940, 300, 'n00TroyVisited');
-        n00TroyVisited.disableBody(true, true);
-        text00 = this.add.text(955, 290, 'Troy', { fontSize: '24px', fill: '#000'});
-        text00.visible = 0;
+        menu = this.add.container(600, 400);
+        menuBack = this.add.image(0, 0, 'menuBack');
+        exit = this.add.image(370, 270, 'exit');
 
-        episode00 = this.add.container(600, 400);
-        episodeBack00 = this.add.image(0, 0, 'episodeBack');
-        exit00 = this.add.image(370, 270, 'exit');
-        story001 = "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope."
-        story001Text = this.add.text(-370, -270, story001, { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        story001_Button1 = this.add.image(-370, -150, 'option');
-        story001_Option1 = "Stay in Troy and become a King here."
-        story001_Option1_Text = this.add.text(-300, -165, story001_Option1, { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        story001_Button2 = this.add.image(-370, -50, 'option');
-        story001_Option2 = "Sail away!"
-        story001_Option2_Text = this.add.text(-300, -65, story001_Option2, { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        menu.add([ menuBack, exit ]);
+        menu.setAlpha(0);
+        exit.setInteractive();
+        exit.on('clicked', sail, this);
 
-        episode00.add([ episodeBack00, exit00, story001Text, story001_Button1,
-        story001_Option1_Text, story001_Button2, story001_Option2_Text ]);
-        episode00.setAlpha(0);
-        exit00.setInteractive();
-        exit00.on('clicked', sail00, this);
-        story001_Button1.setInteractive();
-        story001_Button1.on('clicked', wrong, this);
-        story001_Button2.setInteractive();
-        story001_Button2.on('clicked', right, this);
+// ------------------- Right Answers, Wrong Answers ---------------------------
 
-        // Right Answers, Wrong Answers
-        youWereRight = 'Right';
-        youWereWrong = 'Wrong';
-        youWereRightText = this.add.text(910, 570, youWereRight, { fontSize: '36px', fontStyle:'bold', fill: '#000' });
+        youWereRightText = this.add.text(910, 570, youWereRight, 
+            { fontSize: '36px', fontStyle:'bold', fill: '#000' });
         youWereRightText.setAlpha(0);
-        youWereWrongText = this.add.text(910, 570, youWereWrong, { fontSize: '36px', fontStyle:'bold', fill: '#000' });
+        youWereWrongText = this.add.text(910, 570, youWereWrong, 
+            { fontSize: '36px', fontStyle:'bold', fill: '#000' });
         youWereWrongText.setAlpha(0);
 
-        // Score
-        scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fontStyle:'bold', fill: '#000' });
+// --------------------------------- Score ------------------------------------
 
-        // Player properties
+        scoreText = this.add.text(16, 16, 'Score: 0', 
+            { fontSize: '32px', fontStyle:'bold', fill: '#000' });
+
+// ---------------------------- Player properties -----------------------------
+
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
 
-        // Player animations
+// ------------------------------- Animations ---------------------------------
+
+        // Player
         this.anims.create({
             key: 'left',
             //frames: [ { key: 'ship', frame: 16 } ],
@@ -171,22 +212,26 @@
             frameRate: 20,
         });
 
-        // Input Events
+// ---------------------------------- Input -----------------------------------
+
+        // Keyboard
         cursors = this.input.keyboard.createCursorKeys();    
 
-        //  If a Game Object is clicked on, this event is fired.
-        //  We can use it to emit the 'clicked' event on the game object itself.
+        // Mouse
+        // If a Game Object is clicked on, this event is fired.
+        // We can use it to emit the 'clicked' event on the game object itself.
         this.input.on('gameobjectup', function (pointer, gameObject)
         {
             gameObject.emit('clicked', gameObject);
         }, this);
 
-        // Collisions
-        this.physics.add.overlap(player, n00Troy, dock00, null, this);
+// ----------------------------- Collisions -----------------------------------
+
+        this.physics.add.overlap(player, n00Troy, dock, null, this);
 
     }
 
-// -------------------------------- Update ------------------------------------    
+// ================================ Update ====================================    
 
     function update ()
     {
@@ -223,45 +268,81 @@
         }
     }
 
-// ---------------------------- Functions -------------------------------------
+// ============================ Functions =====================================
 
-// Episode00
-function dock00(player, n00Troy)
-{
-    if (stationNumber == 0) {
-        score += 10;
-        scoreText.setText('Score: ' + score);
-        n00Troy.disableBody(true, true);
-        n00TroyVisited.enableBody(true, n00TroyVisited.x, 0, true, true);
-        text00.visible = 1;
-        episode00.setAlpha(0.8);
-        stationNumber++;
+// menu
+    function dock(player, place)
+    {
+        if (stationNumber == itinerary.indexOf(place)) {
+            score += 100;
+            scoreText.setText('Score: ' + score);
+            itinerary[stationNumber].disableBody(true, true);
+            itineraryVisited[stationNumber].enableBody(true, 
+                itineraryVisited[stationNumber].x, 0, true, true);
+            firstVisit[stationNumber] = false;
+            text[stationNumber].visible = 1;
+
+            story = stories[stationNumber];
+            storyText = this.add.text(-370, -270, story, 
+                { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+            story_Button1 = this.add.image(-370, -150, 'option');
+            storyChoice1 = storyChoices1[stationNumber];
+            storyChoice1_Text = this.add.text(-300, -165, storyChoice1, 
+                { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+            story_Button2 = this.add.image(-370, -50, 'option');
+            storyChoice2 = storyChoices2[stationNumber];
+            storyChoice2_Text = this.add.text(-300, -65, storyChoice2, 
+                { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+            story_Button1.setInteractive();
+            story_Button1.on('clicked', wrong, this);
+            story_Button2.setInteractive();
+            story_Button2.on('clicked', right, this);
+            menu.add([ storyText, story_Button1, storyChoice1_Text, 
+               story_Button2, storyChoice2_Text ]);
+
+            menu.setAlpha(0.8);
+            stationNumber++;
+        } else {
+            if (firstVisit[itinerary.indexOf(place)]) {
+                firstVisit[0] = false;
+                score -= 100;
+                scoreText.setText('Score: ' + score);
+
+                story = wrongPlace;
+                storyText = this.add.text(-370, -270, story, 
+                    { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+                athene = this.add.image(0, 0, 'athene');
+                menu.add([ storyText, athene ]);
+                menu.setAlpha(0.8);
+            }
+        }
     }
-}
 
-function sail00() {
-    episode00.setAlpha(0);
-    youWereRightText.setAlpha(0);
-    youWereWrongText.setAlpha(0);
-    blockInput = false;
-}
-
-function right(){
-    if (!blockInput) {
-        score += 10;
-        scoreText.setText('Score: ' + score);
-        youWereRightText.setAlpha(1);
-        blockInput = true;
+    function sail() {
+        menu.setAlpha(0);
+        youWereRightText.setAlpha(0);
+        youWereWrongText.setAlpha(0);
+        menu.remove([ storyText, story_Button1, storyChoice1_Text, 
+            story_Button2, storyChoice2_Text, athene ]);
+        blockInput = false;
     }
-}
 
-function wrong(){
-    if (!blockInput) {
-        score -= 10;
-        scoreText.setText('Score: ' + score);
-        youWereWrongText.setAlpha(1);
-        blockInput = true;
+    function right(){
+        if (!blockInput) {
+            score += 50;
+            scoreText.setText('Score: ' + score);
+            youWereRightText.setAlpha(1);
+            blockInput = true;
+        }
     }
+
+    function wrong(){
+        if (!blockInput) {
+            score -= 50;
+            scoreText.setText('Score: ' + score);
+            youWereWrongText.setAlpha(1);
+            blockInput = true;
+        }
 }
 
 </script>
