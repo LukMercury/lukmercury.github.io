@@ -14,6 +14,8 @@
 
 <script type="text/javascript">
 
+// ------------------------------- Config -------------------------------------
+
     var config = {
         type: Phaser.AUTO,
         width: 1200,
@@ -31,16 +33,34 @@
         }
     };
 
+// ------------------------------ Variables -----------------------------------
+
     var player;
     var cursors;
+    var stationNumber = 0; // station along the way home
+    var score = 0;
+    var scoreText;
+
+    var n00Troy;
+    var n00TroyVisited;
+    var text00;
+    var episode00;
+    var episodeBack00;
 
     var game = new Phaser.Game(config);
+
+// ------------------------------- Preload ------------------------------------
 
     function preload ()
     {
         this.load.image('map', 'assets/map.png');
+        this.load.image('n00Troy', 'assets/star.png');
+        this.load.image('n00TroyVisited', 'assets/bomb.png');
         this.load.spritesheet('ship', 'assets/ship96.png', { frameWidth: 96, frameHeight: 96 });
+        this.load.image('episodeBack', 'assets/episode-back.png');
     }
+
+// ------------------------------- Create -------------------------------------
 
     function create ()
     {
@@ -48,7 +68,23 @@
         this.add.image(600, 400, 'map');
 
         // Add player
-        player = this.physics.add.sprite(780, 470, 'ship');
+        player = this.physics.add.sprite(880, 330, 'ship');
+
+        // Score
+        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+        // Add map objects
+
+        // Episode00
+        n00Troy = this.physics.add.staticImage(940, 300, 'n00Troy');
+        n00TroyVisited = this.physics.add.staticImage(940, 300, 'n00TroyVisited');
+        n00TroyVisited.disableBody(true, true);
+        text00 = this.add.text(955, 290, 'Troy', { fontSize: '24px', fill: '#000'});
+        text00.visible = 0;
+        episode00 = this.add.container(600, 400);
+        episodeBack00 = this.add.image(0, 0, 'episodeBack');
+        episode00.add([ episodeBack00 ]);
+        episode00.setAlpha(0);
 
         // Player properties
         player.setBounce(0.2);
@@ -95,7 +131,13 @@
 
         // Input Events
         cursors = this.input.keyboard.createCursorKeys();
+
+        // Collisions
+        this.physics.add.overlap(player, n00Troy, dock00, null, this);
+
     }
+
+// -------------------------------- Update ------------------------------------    
 
     function update ()
     {
@@ -132,15 +174,20 @@
         }
     }
 
-/*------------------------------ Info -----------------------------------------
+// ---------------------------- Functions -------------------------------------
 
-Locations {
-    n0_Start { 780, 470, 'near Troy'},
-    n1_Troy {},
-    n2_
+function dock00(player, n00Troy)
+{
+    if (stationNumber == 0) {
+        score += 10;
+        scoreText.setText('Score: ' + score);
+        n00Troy.disableBody(true, true);
+        n00TroyVisited.enableBody(true, n00TroyVisited.x, 0, true, true);
+        text00.visible = 1;
+        episode00.setAlpha(0.8);
+        stationNumber++;
+    }
 }
-
------------------------------------------------------------------------------*/
 
 </script>
 
