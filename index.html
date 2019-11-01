@@ -86,9 +86,6 @@
         // Add player
         player = this.physics.add.sprite(880, 330, 'ship');
 
-        // Score
-        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-
         // Add map objects
 
         // Episode00
@@ -127,6 +124,9 @@
         youWereRightText.setAlpha(0);
         youWereWrongText = this.add.text(910, 570, youWereWrong, { fontSize: '36px', fontStyle:'bold', fill: '#000' });
         youWereWrongText.setAlpha(0);
+
+        // Score
+        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
         // Player properties
         player.setBounce(0.2);
