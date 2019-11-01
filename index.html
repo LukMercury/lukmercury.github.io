@@ -1,0 +1,148 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>The Odyssey - Part 2</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 1200,
+        height: 800,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                debug: false
+            }
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var player;
+    var cursors;
+
+    var game = new Phaser.Game(config);
+
+    function preload ()
+    {
+        this.load.image('map', 'assets/map.png');
+        this.load.spritesheet('ship', 'assets/ship96.png', { frameWidth: 96, frameHeight: 96 });
+    }
+
+    function create ()
+    {
+        // Add map
+        this.add.image(600, 400, 'map');
+
+        // Add player
+        player = this.physics.add.sprite(780, 470, 'ship');
+
+        // Player properties
+        player.setBounce(0.2);
+        player.setCollideWorldBounds(true);
+
+        // Player animations
+        this.anims.create({
+            key: 'left',
+            //frames: [ { key: 'ship', frame: 16 } ],
+            frames: this.anims.generateFrameNumbers('ship', { start: 15, end: 16 }),
+            frameRate: 2,
+            repeat: -1
+        });
+
+       this.anims.create({
+            key: 'right',
+            //frames: [ { key: 'ship', frame: 0 } ],
+            frames: this.anims.generateFrameNumbers('ship', { start: 0, end: 1 }),
+            frameRate: 2,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'up',
+            //frames: [ { key: 'ship', frame: 24 } ],
+            frames: this.anims.generateFrameNumbers('ship', { start: 24, end: 25 }),
+            frameRate: 2,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'down',
+            //frames: [ { key: 'ship', frame: 8 } ],
+            frames: this.anims.generateFrameNumbers('ship', { start: 7, end: 8 }),
+            frameRate: 2,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'stopped',
+            frames: [ { key: 'ship', frame: 10 } ],
+            frameRate: 20,
+        });
+
+        // Input Events
+        cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    function update ()
+    {
+        if (cursors.left.isDown)
+        {
+            player.setVelocityX(-160);
+
+            player.anims.play('left', true);
+        }
+        else if (cursors.right.isDown)
+        {
+            player.setVelocityX(160);
+
+            player.anims.play('right', true);
+        }
+        else if (cursors.up.isDown)
+        {
+            player.setVelocityY(-160);
+
+            player.anims.play('up', true);
+        }
+        else if (cursors.down.isDown)
+        {
+            player.setVelocityY(160);
+
+            player.anims.play('down', true);
+        }
+        else
+        {
+            player.setVelocityX(0);
+            player.setVelocityY(0);
+
+            player.anims.play('stopped');
+        }
+    }
+
+/*------------------------------ Info -----------------------------------------
+
+Locations {
+    n0_Start { 780, 470, 'near Troy'},
+    n1_Troy {},
+    n2_
+}
+
+-----------------------------------------------------------------------------*/
+
+</script>
+
+</body>
+</html>
