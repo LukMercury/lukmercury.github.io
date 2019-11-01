@@ -40,6 +40,11 @@
     var stationNumber = 0; // station along the way home
     var score = 0;
     var scoreText;
+    var youWereRight;
+    var youWereRightText;
+    var youWereWrong;
+    var youWereWrongText;
+    var blockInput = false;
 
     var n00Troy;
     var n00TroyVisited;
@@ -47,6 +52,14 @@
     var episode00;
     var episodeBack00;
     var exit00;
+    var story001;
+    var story001Text;
+    var story001_Button1;
+    var story001_Button2;
+    var story001_Option1;
+    var story001_Option2;
+    var story001_Option1_Text;
+    var story001_Option2_Text;
 
     var game = new Phaser.Game(config);
 
@@ -60,6 +73,7 @@
         this.load.spritesheet('ship', 'assets/ship96.png', { frameWidth: 96, frameHeight: 96 });
         this.load.image('episodeBack', 'assets/episode-back.png');
         this.load.image('exit', 'assets/exit.png');
+        this.load.image('option', 'assets/option.png');
     }
 
 // ------------------------------- Create -------------------------------------
@@ -87,10 +101,32 @@
         episode00 = this.add.container(600, 400);
         episodeBack00 = this.add.image(0, 0, 'episodeBack');
         exit00 = this.add.image(370, 270, 'exit');
-        episode00.add([ episodeBack00, exit00 ]);
+        story001 = "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope."
+        story001Text = this.add.text(-370, -270, story001, { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        story001_Button1 = this.add.image(-370, -150, 'option');
+        story001_Option1 = "Stay in Troy and become a King here."
+        story001_Option1_Text = this.add.text(-300, -165, story001_Option1, { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        story001_Button2 = this.add.image(-370, -50, 'option');
+        story001_Option2 = "Sail away!"
+        story001_Option2_Text = this.add.text(-300, -65, story001_Option2, { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+
+        episode00.add([ episodeBack00, exit00, story001Text, story001_Button1,
+        story001_Option1_Text, story001_Button2, story001_Option2_Text ]);
         episode00.setAlpha(0);
         exit00.setInteractive();
         exit00.on('clicked', sail00, this);
+        story001_Button1.setInteractive();
+        story001_Button1.on('clicked', wrong, this);
+        story001_Button2.setInteractive();
+        story001_Button2.on('clicked', right, this);
+
+        // Right Answers, Wrong Answers
+        youWereRight = 'Right';
+        youWereWrong = 'Wrong';
+        youWereRightText = this.add.text(910, 570, youWereRight, { fontSize: '36px', fontStyle:'bold', fill: '#000' });
+        youWereRightText.setAlpha(0);
+        youWereWrongText = this.add.text(910, 570, youWereWrong, { fontSize: '36px', fontStyle:'bold', fill: '#000' });
+        youWereWrongText.setAlpha(0);
 
         // Player properties
         player.setBounce(0.2);
@@ -205,6 +241,27 @@ function dock00(player, n00Troy)
 
 function sail00() {
     episode00.setAlpha(0);
+    youWereRightText.setAlpha(0);
+    youWereWrongText.setAlpha(0);
+    blockInput = false;
+}
+
+function right(){
+    if (!blockInput) {
+        score += 10;
+        scoreText.setText('Score: ' + score);
+        youWereRightText.setAlpha(1);
+        blockInput = true;
+    }
+}
+
+function wrong(){
+    if (!blockInput) {
+        score -= 10;
+        scoreText.setText('Score: ' + score);
+        youWereWrongText.setAlpha(1);
+        blockInput = true;
+    }
 }
 
 </script>
