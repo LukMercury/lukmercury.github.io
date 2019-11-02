@@ -277,7 +277,7 @@
     function dock(player, place)
     {
         var idx = itinerary.indexOf(place);
-        if (stationNumber == itinerary.[idx]) {
+        if (stationNumber == idx) {
             score += 100;
             scoreText.setText('Score: ' + score);
             itinerary[idx].disableBody(true, true);
