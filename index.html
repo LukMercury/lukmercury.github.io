@@ -276,24 +276,25 @@
     // Arrive at place
     function dock(player, place)
     {
-        if (stationNumber == itinerary.indexOf(place)) {
+        var idx = itinerary.indexOf(place);
+        if (stationNumber == itinerary.[idx]) {
             score += 100;
             scoreText.setText('Score: ' + score);
-            itinerary[stationNumber].disableBody(true, true);
-            itineraryVisited[stationNumber].enableBody(true, 
-                itineraryVisited[stationNumber].x, 0, true, true);
-            firstVisit[indexOf(place)] = false;
-            text[stationNumber].visible = 1;
+            itinerary[idx].disableBody(true, true);
+            itineraryVisited[idx].enableBody(true, 
+                itineraryVisited[idx].x, 0, true, true);
+            firstVisit[idx] = false;
+            text[idx].visible = 1;
 
-            story = stories[stationNumber];
+            story = stories[idx];
             storyText = this.add.text(-370, -270, story, 
                 { fontSize: '24px', fontStyle:'bold', fill: '#000'});
             story_Button1 = this.add.image(-370, -150, 'option');
-            storyChoice1 = storyChoices1[stationNumber];
+            storyChoice1 = storyChoices1[idx];
             storyChoice1_Text = this.add.text(-300, -165, storyChoice1, 
                 { fontSize: '24px', fontStyle:'bold', fill: '#000'});
             story_Button2 = this.add.image(-370, -50, 'option');
-            storyChoice2 = storyChoices2[stationNumber];
+            storyChoice2 = storyChoices2[idx];
             storyChoice2_Text = this.add.text(-300, -65, storyChoice2, 
                 { fontSize: '24px', fontStyle:'bold', fill: '#000'});
             story_Button1.setInteractive();
@@ -306,8 +307,8 @@
             menu.setAlpha(0.8);
             stationNumber++;
         } else {
-            if (firstVisit[itinerary.indexOf(place)]) {
-                firstVisit[indexOf(place)] = false;
+            if (firstVisit[idx]) {
+                firstVisit[idx] = false;
                 score -= 100;
                 scoreText.setText('Score: ' + score);
 
