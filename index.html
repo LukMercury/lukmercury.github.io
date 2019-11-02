@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
-    <title>The Odyssey - Part 6</title>
+    <title>The Odyssey</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <style type="text/css">
         body {
@@ -84,16 +84,20 @@
     // Stories
     var stories = [
     "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope.",
-    " Are you sure?"
+    "Kill everyone first?"
     ]
     var storyChoices1 = [
     "Stay in Troy and become a King here.",
-    "No"
+    "No!"
     ]
     var storyChoices2 = [
     "Sail away!",
-    "Yes!"
+    "Yeah, why not, that would be fun."
     ]
+
+    // 1 or 2
+    var rightChoices = [ 2, 1 ]
+
     // Know where to stop the storyline for each place
     var placeLastStory = [ 1, ]
 
@@ -378,9 +382,9 @@
         storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
         story_Button1.setInteractive();
-        story_Button1.on('clicked', wrong, this);
+        story_Button1.on('clicked', validate1, this);
         story_Button2.setInteractive();
-        story_Button2.on('clicked', right, this);
+        story_Button2.on('clicked', validate2, this);
         menu.add([ storyText, story_Button1, storyChoice1_Text, 
         story_Button2, storyChoice2_Text ]);
 
@@ -408,6 +412,18 @@
             blockInput = true;
         }
     }
+
+    // Validate choices
+    function validate1() {
+        if (rightChoices[storyNumber] == 1) right();
+        else wrong();
+    }
+
+    function validate2() {
+        if (rightChoices[storyNumber] == 2) right();
+        else wrong();
+    }
+
 
     function setStory() {
         storyText.setText(stories[storyNumber]);
