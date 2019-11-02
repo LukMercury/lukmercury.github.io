@@ -35,6 +35,9 @@
 
 // ============================== Variables ===================================
 
+// ------------------------------- Game ---------------------------------------
+    
+    // Basic
     var player;
     var cursors;
     var stationNumber = 0; // station along the way home
@@ -42,6 +45,7 @@
     var score = 0;
     var scoreText;
 
+    // For interactions
     var blockInput = false;
     var blockDocking = false;
 
@@ -66,12 +70,11 @@
     var storyChoice1_Text;
     var storyChoice2_Text;
 
-    // Map objects
+    // Map objects (places)
 
     // Player must visit places in the correct order
     // Keep track of places to access them from functions
     // (this works because objects are passed around by refrence)
-    var noOfPlaces = 1;
     var itinerary = [];
     var itineraryVisited = [];
     var text = [];
@@ -81,7 +84,11 @@
     var i;
     var idx;
 
-    // Stories
+// ------------------------------ Stories -------------------------------------
+// --------------- Add stories here and places below in "Create" --------------
+
+    var noOfPlaces = 1;
+
     var stories = [
     "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope.",
     "Kill everyone first?"
@@ -141,7 +148,8 @@
         for (i = 0; i < noOfPlaces; ++i)
             firstVisit.push(true);
 
-        // Create new place
+// --------------------------- Places -----------------------------------------
+// --------- Add places here and stories above in "Variables" -----------------
 
         // 00 Troy
         var n00Troy = this.physics.add.staticImage(940, 300, 'n00Troy');
@@ -333,13 +341,13 @@
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
 
                 storyButton1.setInteractive();
-                storyButton1.on('clicked', wrong, this);
+                storyButton1.on('clicked', validate1, this);
                 storyButton1.on('pointerover', 
                     function () { storyButton1.setTint(0xff6f69); }, this);
                 storyButton1.on('pointerout', 
                     function () { storyButton1.clearTint(); }, this);
                 storyButton2.setInteractive();
-                storyButton2.on('clicked', right, this);
+                storyButton2.on('clicked', validate2, this);
                 storyButton2.on('pointerover', 
                     function () { storyButton2.setTint(0xff6f69); }, this);
                 storyButton2.on('pointerout', 
@@ -402,13 +410,13 @@
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
 
         storyButton1.setInteractive();
-        storyButton1.on('clicked', wrong, this);
+        storyButton1.on('clicked', validate1, this);
         storyButton1.on('pointerover', 
             function () { storyButton1.setTint(0xff6f69); }, this);
         storyButton1.on('pointerout', 
             function () { storyButton1.clearTint(); }, this);
         storyButton2.setInteractive();
-        storyButton2.on('clicked', right, this);
+        storyButton2.on('clicked', validate2, this);
         storyButton2.on('pointerover', 
             function () { storyButton2.setTint(0xff6f69); }, this);
             storyButton2.on('pointerout', 
