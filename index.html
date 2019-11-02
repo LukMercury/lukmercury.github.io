@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
-    <title>The Odyssey</title>
+    <title>The Odyssey - Part 6</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <style type="text/css">
         body {
@@ -38,9 +38,12 @@
     var player;
     var cursors;
     var stationNumber = 0; // station along the way home
+    var storyNumber = 0;
     var score = 0;
     var scoreText;
+
     var blockInput = false;
+    var blockDocking = false;
 
     var youWereRight ='Right';
     var youWereRightText;
@@ -51,14 +54,15 @@
     var story = "Just Started";
     var menu;
     var menuBack;
-    var exit;
+    var exitButton;             // "Exit" button
+    var nextButton;             // "Next" button
     var wrongPlace = "Oh, poor Odysseus, you have lost your Way!\nMay Athene guide you!"
     var athene;
     var storyText;
     var story_Button1;
     var story_Button2;
-    var storyChoice1;
-    var storyChoice2;
+    var storyChoice1 = "Choice 1";
+    var storyChoice2 = "Choice 2";
     var storyChoice1_Text;
     var storyChoice2_Text;
 
@@ -68,22 +72,30 @@
     // Keep track of places to access them from functions
     // (this works because objects are passed around by refrence)
     var noOfPlaces = 1;
-    var i;
     var itinerary = [];
     var itineraryVisited = [];
     var text = [];
     var firstVisit = [];
 
+    // For iteration
+    var i;
+    var idx;
+
     // Stories
     var stories = [
     "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope.",
+    " Are you sure?"
     ]
     var storyChoices1 = [
     "Stay in Troy and become a King here.",
+    "No"
     ]
     var storyChoices2 = [
     "Sail away!",
+    "Yes!"
     ]
+    // Know where to stop the storyline for each place
+    var placeLastStory = [ 1, ]
 
     // Game
     var game = new Phaser.Game(config);
@@ -100,7 +112,8 @@
             { frameWidth: 96, frameHeight: 96 });
         this.load.image('menuBack', 'assets/menu_Background.png');
         this.load.image('exit', 'assets/exit.png');
-        this.load.image('option', 'assets/option.png');
+        this.load.image('next', 'assets/next.png');
+        this.load.image('choice', 'assets/choice.png');
         this.load.image('athene', 'assets/athene.png');
 
 // ----------------------------- Episodes -------------------------------------
@@ -147,12 +160,12 @@
 
         menu = this.add.container(600, 400);
         menuBack = this.add.image(0, 0, 'menuBack');
-        exit = this.add.image(370, 270, 'exit');
+        exitButton = this.add.image(370, 270, 'exit');
 
-        menu.add([ menuBack, exit ]);
+        menu.add([ menuBack, exitButton ]);
         menu.setAlpha(0);
-        exit.setInteractive();
-        exit.on('clicked', sail, this);
+        exitButton.setInteractive();
+        exitButton.on('clicked', sail, this);
 
 // ------------------- Right Answers, Wrong Answers ---------------------------
 
@@ -276,48 +289,57 @@
     // Arrive at place
     function dock(player, place)
     {
-        var idx = itinerary.indexOf(place);
-        if (stationNumber == idx) {
-            score += 100;
-            scoreText.setText('Score: ' + score);
-            itinerary[idx].disableBody(true, true);
-            itineraryVisited[idx].enableBody(true, 
-                itineraryVisited[idx].x, 0, true, true);
-            firstVisit[idx] = false;
-            text[idx].visible = 1;
+        if (!blockDocking) {
+            blockDocking = true;
+            idx = itinerary.indexOf(place);
 
-            story = stories[idx];
-            storyText = this.add.text(-370, -270, story, 
-                { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-            story_Button1 = this.add.image(-370, -150, 'option');
-            storyChoice1 = storyChoices1[idx];
-            storyChoice1_Text = this.add.text(-300, -165, storyChoice1, 
-                { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-            story_Button2 = this.add.image(-370, -50, 'option');
-            storyChoice2 = storyChoices2[idx];
-            storyChoice2_Text = this.add.text(-300, -65, storyChoice2, 
-                { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-            story_Button1.setInteractive();
-            story_Button1.on('clicked', wrong, this);
-            story_Button2.setInteractive();
-            story_Button2.on('clicked', right, this);
-            menu.add([ storyText, story_Button1, storyChoice1_Text, 
-               story_Button2, storyChoice2_Text ]);
-
-            menu.setAlpha(0.8);
-            stationNumber++;
-        } else {
-            if (firstVisit[idx]) {
-                firstVisit[idx] = false;
-                score -= 100;
+            if (stationNumber == idx) {
+                score += 100;
                 scoreText.setText('Score: ' + score);
+                itinerary[idx].disableBody(true, true);
+                itineraryVisited[idx].enableBody(true, 
+                    itineraryVisited[idx].x, 0, true, true);
+                firstVisit[idx] = false;
+                text[idx].visible = 1;
 
-                story = wrongPlace;
+                if (storyNumber < placeLastStory[stationNumber]) {
+                    nextButton = this.add.image(-370, 270, 'next');
+                    nextButton.setInteractive();
+                    nextButton.on('clicked', next, this);
+                    menu.add([ nextButton ]);
+                }
+
                 storyText = this.add.text(-370, -270, story, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-                athene = this.add.image(0, 0, 'athene');
-                menu.add([ storyText, athene ]);
+                story_Button1 = this.add.image(-370, -70, 'choice');
+                storyChoice1_Text = this.add.text(-300, -85, storyChoice1, 
+                    { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+                story_Button2 = this.add.image(-370, 30, 'choice');
+                storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
+                    { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+                story_Button1.setInteractive();
+                story_Button1.on('clicked', wrong, this);
+                story_Button2.setInteractive();
+                story_Button2.on('clicked', right, this);
+                menu.add([ storyText, story_Button1, storyChoice1_Text, 
+                   story_Button2, storyChoice2_Text ]);
+
+                setStory();
+
                 menu.setAlpha(0.8);
+            } else {
+                if (firstVisit[idx]) {
+                    firstVisit[idx] = false;
+                    score -= 100;
+                    scoreText.setText('Score: ' + score);
+
+                    story = wrongPlace;
+                    storyText = this.add.text(-370, -270, story, 
+                        { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+                    athene = this.add.image(0, 0, 'athene');
+                    menu.add([ storyText, athene ]);
+                    menu.setAlpha(0.8);
+                }
             }
         }
     }
@@ -327,13 +349,48 @@
         menu.setAlpha(0);
         youWereRightText.setAlpha(0);
         youWereWrongText.setAlpha(0);
-        menu.remove([ storyText, story_Button1, storyChoice1_Text, 
+        menu.remove([ nextButton, storyText, story_Button1, storyChoice1_Text, 
             story_Button2, storyChoice2_Text, athene ]);
         blockInput = false;
+        blockDocking = false;
+        storyNumber = placeLastStory[stationNumber];
+        storyNumber++;
+        stationNumber++;
     }
 
-    // Right answer
-    function right(){
+    // Next paragraph
+    function next() {
+        menu.setAlpha(0);
+        youWereRightText.setAlpha(0);
+        youWereWrongText.setAlpha(0);
+        menu.remove([ nextButton, storyText, story_Button1, storyChoice1_Text, 
+            story_Button2, storyChoice2_Text ]);
+
+        blockInput = false;
+        storyNumber++;
+
+        storyText = this.add.text(-370, -270, story, 
+            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        story_Button1 = this.add.image(-370, -70, 'choice');
+        storyChoice1_Text = this.add.text(-300, -85, storyChoice1, 
+            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        story_Button2 = this.add.image(-370, 30, 'choice');
+        storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
+            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        story_Button1.setInteractive();
+        story_Button1.on('clicked', wrong, this);
+        story_Button2.setInteractive();
+        story_Button2.on('clicked', right, this);
+        menu.add([ storyText, story_Button1, storyChoice1_Text, 
+        story_Button2, storyChoice2_Text ]);
+
+        setStory();
+
+        menu.setAlpha(0.8);
+    }
+
+    // Right choice
+    function right() {
         if (!blockInput) {
             score += 50;
             scoreText.setText('Score: ' + score);
@@ -342,15 +399,21 @@
         }
     }
 
-    // Wrong answeGr
-    function wrong(){
+    // Wrong choice
+    function wrong() {
         if (!blockInput) {
             score -= 50;
             scoreText.setText('Score: ' + score);
             youWereWrongText.setAlpha(1);
             blockInput = true;
         }
-}
+    }
+
+    function setStory() {
+        storyText.setText(stories[storyNumber]);
+        storyChoice1_Text.setText(storyChoices1[storyNumber]);
+        storyChoice2_Text.setText(storyChoices2[storyNumber]);
+    }
 
 </script>
 
