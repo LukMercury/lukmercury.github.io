@@ -59,8 +59,8 @@
     var wrongPlace = "Oh, poor Odysseus, you have lost your Way!\nMay Athene guide you!"
     var athene;
     var storyText;
-    var story_Button1;
-    var story_Button2;
+    var storyButton1;
+    var storyButton2;
     var storyChoice1 = "Choice 1";
     var storyChoice2 = "Choice 2";
     var storyChoice1_Text;
@@ -169,7 +169,12 @@
         menu.add([ menuBack, exitButton ]);
         menu.setAlpha(0);
         exitButton.setInteractive();
+
         exitButton.on('clicked', sail, this);
+        exitButton.on('pointerover', 
+            function () { exitButton.setTint(0xfeffa3); }, this);
+        exitButton.on('pointerout', 
+            function () { exitButton.clearTint(); }, this);
 
 // ------------------- Right Answers, Wrong Answers ---------------------------
 
@@ -308,25 +313,39 @@
 
                 if (storyNumber < placeLastStory[stationNumber]) {
                     nextButton = this.add.image(-370, 270, 'next');
+
                     nextButton.setInteractive();
                     nextButton.on('clicked', next, this);
+                    nextButton.on('pointerover', 
+                        function () { nextButton.setTint(0xfeffa3); }, this);
+                    nextButton.on('pointerout', 
+                        function () { nextButton.clearTint(); }, this);
                     menu.add([ nextButton ]);
                 }
 
                 storyText = this.add.text(-370, -270, story, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-                story_Button1 = this.add.image(-370, -70, 'choice');
+                storyButton1 = this.add.image(-370, -70, 'choice');
                 storyChoice1_Text = this.add.text(-300, -85, storyChoice1, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-                story_Button2 = this.add.image(-370, 30, 'choice');
+                storyButton2 = this.add.image(-370, 30, 'choice');
                 storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-                story_Button1.setInteractive();
-                story_Button1.on('clicked', wrong, this);
-                story_Button2.setInteractive();
-                story_Button2.on('clicked', right, this);
-                menu.add([ storyText, story_Button1, storyChoice1_Text, 
-                   story_Button2, storyChoice2_Text ]);
+
+                storyButton1.setInteractive();
+                storyButton1.on('clicked', wrong, this);
+                storyButton1.on('pointerover', 
+                    function () { storyButton1.setTint(0xff6f69); }, this);
+                storyButton1.on('pointerout', 
+                    function () { storyButton1.clearTint(); }, this);
+                storyButton2.setInteractive();
+                storyButton2.on('clicked', right, this);
+                storyButton2.on('pointerover', 
+                    function () { storyButton2.setTint(0xff6f69); }, this);
+                storyButton2.on('pointerout', 
+                    function () { storyButton2.clearTint(); }, this);
+                menu.add([ storyText, storyButton1, storyChoice1_Text, 
+                   storyButton2, storyChoice2_Text ]);
 
                 setStory();
 
@@ -353,8 +372,8 @@
         menu.setAlpha(0);
         youWereRightText.setAlpha(0);
         youWereWrongText.setAlpha(0);
-        menu.remove([ nextButton, storyText, story_Button1, storyChoice1_Text, 
-            story_Button2, storyChoice2_Text, athene ]);
+        menu.remove([ nextButton, storyText, storyButton1, storyChoice1_Text, 
+            storyButton2, storyChoice2_Text, athene ]);
         blockInput = false;
         blockDocking = false;
         storyNumber = placeLastStory[stationNumber];
@@ -367,26 +386,36 @@
         menu.setAlpha(0);
         youWereRightText.setAlpha(0);
         youWereWrongText.setAlpha(0);
-        menu.remove([ nextButton, storyText, story_Button1, storyChoice1_Text, 
-            story_Button2, storyChoice2_Text ]);
+        menu.remove([ nextButton, storyText, storyButton1, storyChoice1_Text, 
+            storyButton2, storyChoice2_Text ]);
 
         blockInput = false;
         storyNumber++;
 
         storyText = this.add.text(-370, -270, story, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        story_Button1 = this.add.image(-370, -70, 'choice');
+        storyButton1 = this.add.image(-370, -70, 'choice');
         storyChoice1_Text = this.add.text(-300, -85, storyChoice1, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        story_Button2 = this.add.image(-370, 30, 'choice');
+        storyButton2 = this.add.image(-370, 30, 'choice');
         storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        story_Button1.setInteractive();
-        story_Button1.on('clicked', validate1, this);
-        story_Button2.setInteractive();
-        story_Button2.on('clicked', validate2, this);
-        menu.add([ storyText, story_Button1, storyChoice1_Text, 
-        story_Button2, storyChoice2_Text ]);
+
+        storyButton1.setInteractive();
+        storyButton1.on('clicked', wrong, this);
+        storyButton1.on('pointerover', 
+            function () { storyButton1.setTint(0xff6f69); }, this);
+        storyButton1.on('pointerout', 
+            function () { storyButton1.clearTint(); }, this);
+        storyButton2.setInteractive();
+        storyButton2.on('clicked', right, this);
+        storyButton2.on('pointerover', 
+            function () { storyButton2.setTint(0xff6f69); }, this);
+            storyButton2.on('pointerout', 
+            function () { storyButton2.clearTint(); }, this);
+        menu.add([ storyText, storyButton1, storyChoice1_Text, 
+            storyButton2, storyChoice2_Text ]);
+
 
         setStory();
 
@@ -429,6 +458,12 @@
         storyText.setText(stories[storyNumber]);
         storyChoice1_Text.setText(storyChoices1[storyNumber]);
         storyChoice2_Text.setText(storyChoices2[storyNumber]);
+    }
+
+// ------------------------------ Effects -------------------------------------
+
+    function mouseOver() {
+
     }
 
 </script>
