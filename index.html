@@ -87,26 +87,59 @@
 // ------------------------------ Stories -------------------------------------
 // --------------- Add stories here and places below in "Create" --------------
 
-    var noOfPlaces = 1;
+    var noOfPlaces = 5;
 
     var stories = [
-    "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope.",
-    "Kill everyone first?"
+    "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope. You:",
+    "You reach the Land of the Cicones, which is close to Troy.\nHaving won the Trojan War, you decide to:",
+    "After having defeated the Cicones, do you take your leave\nor stay a while longer for a feast?",
+    "The Cicones gather their forces and engage you with all the\nwrath of Ares. You suffer innumerable losses but manage to\nescape with some of your men.",
+    "You reach a strange shore. A strange feeling of serenity\nenvelops the whole place...",
+    "The men you sent ate of the lotus flowers they were given\nby the inhabitants. Now they forgot what they had to do\nand even who they are in a feeling of blissful oblivion.",
+    "On your way home you reach a plentiful land. You spend the\nfirst night on an island near the shore. In the morning\nyou take a ship and sail to the mainland. You find\na cave that's clearly inhabited.",
+    "The cave is full of sheep, goats, cheese and wine. You and\nyour men eat your fill. Then you decide to:",
+    "The Cyclops called Polyphemus enters his cave and milks\nthe sheep. You try to talk him into giving you a plentiful\nbounty. To your surpise he eats two of your men. The cave\nentrance is blocked by a huge rock.",
+    "The Polyphemus eats another two of your men.",
+    "Polyphemus screams for his neighbors, but when they\nask him who blinded him he says\"Nobody\"...",
+    "You reach the abode of Aiolos the Wind God. He gives\nyou a bag of storm winds which take you\nnear your home. You are nearly there...",
+    "Your men open the bag thinking it is full of gold.\nThe winds are let loose and they drive you far out at\nsea, back to Aiolos. You ask for his help again.",
     ]
     var storyChoices1 = [
     "Stay in Troy and become a King here.",
-    "No!"
+    "Sack the city.",
+    "Party hard, YOLO!",
+    "Curse the Gods!!!",
+    "Send some men to scout.",
+    "You can't afford to save them without losing more\nmen, you know your comrades all too well and they\ntoo will eat of the lotus flowers.",
+    "You stand in front of the cave waiting for the\ncave-dweller to arrive.",
+    "Round up as many sheep as possible and leave\nthe place in a hurry.",
+    "Make your move now!",
+    "Make him drunk with some of the wine you brough with\nyou. While he sleeps drive a fiery stake though his eye.\nLeave the cave tied to the bellies of rams.",
+    "In a fit of rage, you boast and tell him your name.\nHearing where you are, he starts throwning whole crags\nat you. He invokes the wrath of his father Poseidon.",
+    "Keep the bag shut and guard it with your life!",
+    "\"Begone, you wasted the help that I gave you! You\nare unworthy!\"",
     ]
     var storyChoices2 = [
     "Sail away!",
-    "Yeah, why not, that would be fun."
+    "Send an envoy. The story of your glorious victory has\nspread far and wide. Surely you will be received like\na King with a feast and many gifts, giving you the\nopportunity to tell the story of your exploits.",
+    "Being a cunning general, you know that the Cicones\nwill gather reinforcements, time to leave!",
+    "Count your losses, and your blessings...",
+    "Take your whole company, fully armed, except for a\nfew you leave behind to guard the ships...",
+    "You drag your men to the ships and sail away.",
+    "Sneak into the cave.",
+    "Stick around in order to ask the inhabitant\nfor gifts.",
+    "Talk to him a bit. When he asks your name, tell him\nit is \"Nobody\".",
+    "Create a diversion to take advantage of his narrow\nfield of vision. While you talk to him your men\ndrive a fiery stake through his eye.\nThen run for your lives!",
+    "You hurry to your ships as quietly as you can.\nYou count your losses and your blessings...",
+    "Fall asleep...",
+    "Try to talk things through and explain the stupidity\nof your men... aaa, the circumstances.",
     ]
 
     // 1 or 2
-    var rightChoices = [ 2, 1 ]
+    var rightChoices = [ 2, 1, 1, 2, 1, 2, 2, 2, 2, 1, 1, 2, 1, ]
 
     // Know where to stop the storyline for each place
-    var placeLastStory = [ 1, ]
+    var placeLastStory = [ 0, 3, 5, 10, 12, ]
 
     // Game
     var game = new Phaser.Game(config);
@@ -119,7 +152,7 @@
 // ------------------------------ Game ----------------------------------------
 
         this.load.image('map', 'assets/map.png');
-        this.load.spritesheet('ship', 'assets/ship96.png', 
+        this.load.spritesheet('ship', 'assets/ship.png', 
             { frameWidth: 96, frameHeight: 96 });
         this.load.image('menuBack', 'assets/menu_Background.png');
         this.load.image('exit', 'assets/exit.png');
@@ -129,8 +162,22 @@
 
 // ----------------------------- Episodes -------------------------------------
 
+        // Episode 00
         this.load.image('n00Troy', 'assets/star.png');
         this.load.image('n00TroyVisited', 'assets/troy.png');
+        // Episode 01
+        this.load.image('n01Cicones', 'assets/star.png');
+        this.load.image('n01CiconesVisited', 'assets/cicones.png');
+        // Episode 02
+        this.load.image('n02Lotus', 'assets/star.png');
+        this.load.image('n02LotusVisited', 'assets/lotus.png');
+        // Episode 03
+        this.load.image('n03Cyclops', 'assets/star.png');
+        this.load.image('n03CyclopsVisited', 'assets/cyclops.png');
+        // Episode 04
+        this.load.image('n04Aiolos', 'assets/star.png');
+        this.load.image('n04AiolosVisited', 'assets/aiolos.png');
+
     }
 
 // =============================== Create =====================================
@@ -145,13 +192,14 @@
 // ---------------------------- Map Objects -----------------------------------
         
         // You get a penalty and a warning for stopping in the wrong order
-        for (i = 0; i < noOfPlaces; ++i)
+        for (i = 0; i < noOfPlaces; i++)
             firstVisit.push(true);
 
 // --------------------------- Places -----------------------------------------
-// --------- Add places here and stories above in "Variables" -----------------
+// ---------- Add places here and stories above in "Variables" ----------------
+// -------- Don't forget to add collisions at the bottom of "Create" ----------
 
-        // 00 Troy
+        // Episode 00 - Troy
         var n00Troy = this.physics.add.staticImage(940, 300, 'n00Troy');
         var n00TroyVisited = this.physics.add.staticImage(960, 300, 
             'n00TroyVisited');
@@ -163,6 +211,55 @@
         itinerary.push(n00Troy);
         itineraryVisited.push(n00TroyVisited);
         text.push(text00);
+
+        // Episode 01 - Cicones
+        var n01Cicones = this.physics.add.staticImage(920, 250, 'n01Cicones');
+        var n01CiconesVisited = this.physics.add.staticImage(910, 220, 
+            'n01CiconesVisited');
+        n01CiconesVisited.disableBody(true, true);
+        var text01 = this.add.text(770, 230, 'Cicones', 
+            { fontSize: '24px', fill: '#000'});
+        text01.visible = 0;
+        itinerary.push(n01Cicones);
+        itineraryVisited.push(n01CiconesVisited);
+        text.push(text01);
+
+        // Episode 02 - Lotus Eaters
+        var n02Lotus = this.physics.add.staticImage(480, 640, 'n02Lotus');
+        var n02LotusVisited = this.physics.add.staticImage(470, 640, 
+            'n02LotusVisited');
+        n02LotusVisited.disableBody(true, true);
+        var text02 = this.add.text(330, 680, 'Lotophagues', 
+            { fontSize: '24px', fill: '#000'});
+        text02.visible = 0;
+        itinerary.push(n02Lotus);
+        itineraryVisited.push(n02LotusVisited);
+        text.push(text02);
+
+        // Episode 03 - Polyphemus the Cyclops
+        var n03Cyclops = this.physics.add.staticImage(620, 490, 'n03Cyclops');
+        var n03CyclopsVisited = this.physics.add.staticImage(620, 450, 
+            'n03CyclopsVisited');
+        n03CyclopsVisited.disableBody(true, true);
+        var text03 = this.add.text(570, 370, 'Polyphemus', 
+            { fontSize: '24px', fill: '#000'});
+        text03.visible = 0;
+        itinerary.push(n03Cyclops);
+        itineraryVisited.push(n03CyclopsVisited);
+        text.push(text03);
+
+        // Episode 04 - Aiolos
+        var n04Aiolos = this.physics.add.staticImage(510, 430, 'n04Aiolos');
+        var n04AiolosVisited = this.physics.add.staticImage(500, 410, 
+            'n04AiolosVisited');
+        n04AiolosVisited.disableBody(true, true);
+        var text04 = this.add.text(440, 460, 'Aiolos', 
+            { fontSize: '24px', fill: '#000'});
+        text04.visible = 0;
+        itinerary.push(n04Aiolos);
+        itineraryVisited.push(n04AiolosVisited);
+        text.push(text04);
+
 
 // ------------------------------ Player --------------------------------------
 
@@ -260,7 +357,16 @@
 // ----------------------------- Collisions -----------------------------------
 
         // One for each place
+        // Episode 00
         this.physics.add.overlap(player, n00Troy, dock, null, this);
+        // Episode 01
+        this.physics.add.overlap(player, n01Cicones, dock, null, this);
+        // Episode 02
+        this.physics.add.overlap(player, n02Lotus, dock, null, this);
+        // Episode 03
+        this.physics.add.overlap(player, n03Cyclops, dock, null, this);
+        // Episode 04
+        this.physics.add.overlap(player, n04Aiolos, dock, null, this);
 
     }
 
@@ -307,17 +413,17 @@
     function dock(player, place)
     {
         if (!blockDocking) {
-            blockDocking = true;
             idx = itinerary.indexOf(place);
 
             if (stationNumber == idx) {
+                blockDocking = true;
                 score += 100;
                 scoreText.setText('Score: ' + score);
                 itinerary[idx].disableBody(true, true);
                 itineraryVisited[idx].enableBody(true, 
                     itineraryVisited[idx].x, 0, true, true);
-                firstVisit[idx] = false;
                 text[idx].visible = 1;
+                firstVisit[idx] = false;
 
                 if (storyNumber < placeLastStory[stationNumber]) {
                     nextButton = this.add.image(-370, 270, 'next');
@@ -334,10 +440,10 @@
                 storyText = this.add.text(-370, -270, story, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
                 storyButton1 = this.add.image(-370, -70, 'choice');
-                storyChoice1_Text = this.add.text(-300, -85, storyChoice1, 
+                storyChoice1_Text = this.add.text(-300, -105, storyChoice1, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
                 storyButton2 = this.add.image(-370, 30, 'choice');
-                storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
+                storyChoice2_Text = this.add.text(-300, -5, storyChoice2, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
 
                 storyButton1.setInteractive();
@@ -360,14 +466,16 @@
                 menu.setAlpha(0.8);
             } else {
                 if (firstVisit[idx]) {
-                    firstVisit[idx] = false;
+                    blockDocking = true;
                     score -= 100;
                     scoreText.setText('Score: ' + score);
+                    firstVisit[idx] = false;
 
-                    story = wrongPlace;
                     storyText = this.add.text(-370, -270, story, 
                         { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+                    storyText.setText(wrongPlace);
                     athene = this.add.image(0, 0, 'athene');
+
                     menu.add([ storyText, athene ]);
                     menu.setAlpha(0.8);
                 }
@@ -384,9 +492,12 @@
             storyButton2, storyChoice2_Text, athene ]);
         blockInput = false;
         blockDocking = false;
-        storyNumber = placeLastStory[stationNumber];
-        storyNumber++;
-        stationNumber++;
+
+        if (stationNumber == idx) {
+            storyNumber = placeLastStory[stationNumber];
+            storyNumber++;
+            stationNumber++;
+        }
     }
 
     // Next paragraph
@@ -400,13 +511,25 @@
         blockInput = false;
         storyNumber++;
 
+        if (storyNumber < placeLastStory[stationNumber]) {
+            nextButton = this.add.image(-370, 270, 'next');
+
+            nextButton.setInteractive();
+            nextButton.on('clicked', next, this);
+            nextButton.on('pointerover', 
+                function () { nextButton.setTint(0xfeffa3); }, this);
+            nextButton.on('pointerout', 
+                function () { nextButton.clearTint(); }, this);
+            menu.add([ nextButton ]);
+        }
+
         storyText = this.add.text(-370, -270, story, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
         storyButton1 = this.add.image(-370, -70, 'choice');
-        storyChoice1_Text = this.add.text(-300, -85, storyChoice1, 
+        storyChoice1_Text = this.add.text(-300, -105, storyChoice1, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
         storyButton2 = this.add.image(-370, 30, 'choice');
-        storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
+        storyChoice2_Text = this.add.text(-300, -5, storyChoice2, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
 
         storyButton1.setInteractive();
@@ -423,7 +546,6 @@
             function () { storyButton2.clearTint(); }, this);
         menu.add([ storyText, storyButton1, storyChoice1_Text, 
             storyButton2, storyChoice2_Text ]);
-
 
         setStory();
 
@@ -461,7 +583,6 @@
         else wrong();
     }
 
-
     function setStory() {
         storyText.setText(stories[storyNumber]);
         storyChoice1_Text.setText(storyChoices1[storyNumber]);
@@ -469,10 +590,6 @@
     }
 
 // ------------------------------ Effects -------------------------------------
-
-    function mouseOver() {
-
-    }
 
 </script>
 
