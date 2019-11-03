@@ -60,7 +60,7 @@
     var menuBack;
     var exitButton;             // "Exit" button
     var nextButton;             // "Next" button
-    var wrongPlace = "Oh, poor Odysseus, you have lost your Way!\nMay Athene guide you!"
+    var wrongPlace = "Oh, poor Odysseus, you have lost your way!\nMay Athene guide you!"
     var athene;
     var storyText;
     var storyButton1;
@@ -87,10 +87,10 @@
 // ------------------------------ Stories -------------------------------------
 // --------------- Add stories here and places below in "Create" --------------
 
-    var noOfPlaces = 5;
+    var noOfPlaces = 14;
 
     var stories = [
-    "After sacking Troy, Ulysses can finally return home\nto his beloved Penelope. You:",
+    "After sacking Troy, Ulysses can finally return home\nto his beloved wife Penelope. You:",
     "You reach the Land of the Cicones, which is close to Troy.\nHaving won the Trojan War, you decide to:",
     "After having defeated the Cicones, do you take your leave\nor stay a while longer for a feast?",
     "The Cicones gather their forces and engage you with all the\nwrath of Ares. You suffer innumerable losses but manage to\nescape with some of your men.",
@@ -103,7 +103,24 @@
     "Polyphemus screams for his neighbors, but when they\nask him who blinded him he says\"Nobody\"...",
     "You reach the abode of Aiolos the Wind God. He gives\nyou a bag of storm winds which take you\nnear your home. You are nearly there...",
     "Your men open the bag thinking it is full of gold.\nThe winds are let loose and they drive you far out at\nsea, back to Aiolos. You ask for his help again.",
-    ]
+    "Feeling tired and dejected, you reach a land inhabited\nby giants. Do you moor your ships and send an evnoy\nto the city?",
+    "The inhabitands are cannibals (again!) and eat one\nof your envoys. The other two manage to escape. But\nthey are pursued and the giants start throwning rocks\nat your ships.",
+    "You reach the island Aiaia, home of the sorceress Circe.\nYou send some men to explore but she turns them into pigs.\nWhat do you do?",
+    "Hermes gives you a magic herb (moly) which prevents you\nfrom being turned into a pig. Keeping your human shape,\nyou get to know Circe. One thing leads to another...\nall men are pigs.",
+    "You reach the Gates of Hades...",
+    "First you meet the crew member who lies unburied back on\nAiaia. You promise to tend to his funerals. Next to appear\nis Tirsias, the only one who has kept his blood even in\nthe Underworld. He warns you not to touch the cattle of\nthe Sun and reports on what happened back home.",
+    "After tending to your friends' funeral, you finally head\nhome. It's strange but the journeying to Hades has\nreleased the warm breath of enthusiasm in your soul.",
+    "Without notice, your mood starts to change. You are\novercome by a sense of loss and longing, the depths\nare calling with a promise of eternal bliss.",
+    "A strange music starts ringing in your ears.\nIt's the Sirens!",
+    "What about the men?",
+    "Now you have to sail past some monsters.\nIt's either Scylla or Charybdis.",
+    "You reach the island where Helios keeps his cattle. You\nwait out a storm for 30 days. You and your men get\nhungry.",
+    "Helios invokes the wrath of Zeus. Your ship\nis destroyed by a lighting bolt. You cling desperately to\na tree and reach the island of Calypso, an earthly\nParadise.",
+    "A storm drives your raft towards the land of the\nPhaiakians, skilled sailors and close to the Gods.\nWhen your raft is destroyed you hang on to a log.\nCliffs ahead!",
+    "You reach a beach near a river mouth. You spend the night\nin a thicket covered in leaves. In the morning, the\nking's daughter, inspired by Athene, comes by the river\nto wash some clothes.",
+    "You sneak into the city surrounded by a shroud created\nby Athene. You reach the kingly hearth where you throw\nyourself in the ashes, grabing hold of the queen's\nknees and begging for help.",
+    "You finally reach your homeland Ithaka after ten years of\nwar and ten years of wandering. But your palace is full\nof enemies, suitors of Penelope.",
+    ];
     var storyChoices1 = [
     "Stay in Troy and become a King here.",
     "Sack the city.",
@@ -114,11 +131,28 @@
     "You stand in front of the cave waiting for the\ncave-dweller to arrive.",
     "Round up as many sheep as possible and leave\nthe place in a hurry.",
     "Make your move now!",
-    "Make him drunk with some of the wine you brough with\nyou. While he sleeps drive a fiery stake though his eye.\nLeave the cave tied to the bellies of rams.",
+    "Make him drunk with some of the wine you brough with\nyou. While he sleeps drive a fiery stake though his\neye. Leave the cave tied to the bellies of rams.",
     "In a fit of rage, you boast and tell him your name.\nHearing where you are, he starts throwning whole crags\nat you. He invokes the wrath of his father Poseidon.",
     "Keep the bag shut and guard it with your life!",
     "\"Begone, you wasted the help that I gave you! You\nare unworthy!\"",
-    ]
+    "Why risk it? All efforts are for naught anyway.",
+    "You only manage to save one ship, your own...",
+    "Whatever, all men are pigs anyway.",
+    "Circe lets you go on your way home, but she advises\nyou to got to the Underworld first, to seek the\ncounsel of the blind prophet Tiresias.",
+    "Start making sacrifices to attract the shades.",
+    "Find out more!",
+    "Stay the course!",
+    "Have a contest with your bros\nto forget all about it.",
+    "Might as well go for a swim.",
+    "Have them plug their ears with wax. Being\ndeaf has always paid off...",
+    "Sail past Scylla.",
+    "While you sleep, your men eat of the golden cattle.",
+    "You spend ten years here, until Hermes comes\nbearing a message from Zeus. Ahtene has spoken\nin your favor and Zeus is ordering Calypso\nto send you home.",
+    "Swim for it!",
+    "You grab hold of her knees and beg for help.\nHer servants wash you and dress you up.",
+    "The king gives you a ship to take you home.",
+    "Sneak into the palace dressed as a beggar.",
+    ];
     var storyChoices2 = [
     "Sail away!",
     "Send an envoy. The story of your glorious victory has\nspread far and wide. Surely you will be received like\na King with a feast and many gifts, giving you the\nopportunity to tell the story of your exploits.",
@@ -133,13 +167,32 @@
     "You hurry to your ships as quietly as you can.\nYou count your losses and your blessings...",
     "Fall asleep...",
     "Try to talk things through and explain the stupidity\nof your men... aaa, the circumstances.",
-    ]
+    "Might as well. As beaten down as you always were,\none thing you never lost is your curiosity.",
+    "You lose two of your tweleve ships, but they are\nthe ones holding the most precious cargo.",
+    "\"Oh, Hermes, most happy one, swift messenger of\nthe Gods and guide of souls. Help me out!\"",
+    "Circe will let you leave on the condition that you\nbring her a golden bull from Helios' herd.",
+    "Even if you're mad enough to enter, you will be mad\nnice and proper if you ever make it out alive.",
+    "What happens in Hades, stays in Hades.",
+    "Veer off to take a break.",
+    "You see your men jumping overboard.",
+    "\"Tie me to the mast, I must believe!\"",
+    "Shackle them to the oars.",
+    "Sail straight in between.",
+    "At least you have wine...",
+    "You spend eight years here, until Hermes comes\nbearing a message from Zeus. Ahtene has spoken\nin your favor and Zeus is ordering Calypso\nto send you home.",
+    "Some fishers rescue you.",
+    "You tell her of your troubles from a distance\nand beg for help.\nHer servants wash you and dress you up.",
+    "The king lets you stay the night and throws a feast\nin your honor, where you get to compete with his sons\nand relate your adventures.\nThen he gives you a ship to take you home.",
+    "Be patient and wait for the expansion.",
+    ];
 
     // 1 or 2
-    var rightChoices = [ 2, 1, 1, 2, 1, 2, 2, 2, 2, 1, 1, 2, 1, ]
+    var rightChoices = [ 2, 1, 1, 2, 1, 2, 2, 2, 2, 1, 1, 2, 1, 2, 1, 2, 1, 1, 
+        2, 1, 2, 2, 1, 1, 1, 2, 1, 2, 2, 2, 2 ];
 
     // Know where to stop the storyline for each place
-    var placeLastStory = [ 0, 3, 5, 10, 12, ]
+    var placeLastStory = [ 0, 3, 5, 10, 12, 14, 16, 18, 22, 23, 24, 25, 28, 
+        29, ];
 
     // Game
     var game = new Phaser.Game(config);
@@ -177,6 +230,35 @@
         // Episode 04
         this.load.image('n04Aiolos', 'assets/star.png');
         this.load.image('n04AiolosVisited', 'assets/aiolos.png');
+        // Episode 05
+        this.load.image('n05Laistrygones', 'assets/star.png');
+        this.load.image('n05LaistrygonesVisited', 'assets/laistrygones.png');
+        // Episode 06
+        this.load.image('n06Circe', 'assets/star.png');
+        this.load.image('n06CirceVisited', 'assets/pig.png');
+        // Episode 07
+        this.load.image('n07Hades', 'assets/star.png');
+        this.load.image('n07HadesVisited', 'assets/hades.png');
+        // Episode 08
+        this.load.image('n08Sirens', 'assets/star.png');
+        this.load.image('n08SirensVisted', 'assets/sirens.png');
+        // Episode 09
+        this.load.image('n09Scylla', 'assets/star.png');
+        this.load.image('n09ScyllaVisited', 'assets/scylla.png');
+        // Episode 10
+        this.load.image('n10Helios', 'assets/star.png');
+        this.load.image('n10HeliosVisited', 'assets/bull.png');
+        // Episode 11
+        this.load.image('n11Calypso', 'assets/star.png');
+        this.load.image('n11CalypsoVisited', 'assets/calypso.png');
+        // Episode 12
+        this.load.image('n12Phaiakians', 'assets/star.png');
+        this.load.image('n12PhaiakiansVisited', 'assets/phaiakians.png');
+        // Finale
+        this.load.image('ithaka', 'assets/star.png');
+        this.load.image('ithakaVisited', 'assets/ithaka.png');
+        // Game Over
+        this.load.image('gameOver', 'assets/athene.png');
 
     }
 
@@ -198,6 +280,7 @@
 // --------------------------- Places -----------------------------------------
 // ---------- Add places here and stories above in "Variables" ----------------
 // -------- Don't forget to add collisions at the bottom of "Create" ----------
+
 
         // Episode 00 - Troy
         var n00Troy = this.physics.add.staticImage(940, 300, 'n00Troy');
@@ -241,7 +324,7 @@
         var n03CyclopsVisited = this.physics.add.staticImage(620, 450, 
             'n03CyclopsVisited');
         n03CyclopsVisited.disableBody(true, true);
-        var text03 = this.add.text(570, 370, 'Polyphemus', 
+        var text03 = this.add.text(570, 375, 'Polyphemus', 
             { fontSize: '24px', fill: '#000'});
         text03.visible = 0;
         itinerary.push(n03Cyclops);
@@ -260,6 +343,111 @@
         itineraryVisited.push(n04AiolosVisited);
         text.push(text04);
 
+        // Episode 05 - Laistrygones
+        var n05Laistrygones = this.physics.add.staticImage(540, 170, 'n05Laistrygones');
+        var n05LaistrygonesVisited = this.physics.add.staticImage(560, 150, 
+            'n05LaistrygonesVisited');
+        n05LaistrygonesVisited.disableBody(true, true);
+        var text05 = this.add.text(550, 90, 'Laistrygones', 
+            { fontSize: '24px', fill: '#000'});
+        text05.visible = 0;
+        itinerary.push(n05Laistrygones);
+        itineraryVisited.push(n05LaistrygonesVisited);
+        text.push(text05);
+
+        // Episode 06 - Circe
+        var n06Circe = this.physics.add.staticImage(480, 150, 'n06Circe');
+        var n06CirceVisited = this.physics.add.staticImage(480, 170, 
+            'n06CirceVisited');
+        n06CirceVisited.disableBody(true, true);
+        var text06 = this.add.text(400, 195, 'Circe', 
+            { fontSize: '24px', fill: '#000'});
+        text06.visible = 0;
+        itinerary.push(n06Circe);
+        itineraryVisited.push(n06CirceVisited);
+        text.push(text06);
+
+        // Episode 07 - Hades
+        var n07Hades = this.physics.add.staticImage(495, 70, 'n07Hades');
+        var n07HadesVisited = this.physics.add.staticImage(480, 40, 
+            'n07HadesVisited');
+        n07HadesVisited.disableBody(true, true);
+        var text07 = this.add.text(360, 20, 'Hades', 
+            { fontSize: '24px', fill: '#000'});
+        text07.visible = 0;
+        itinerary.push(n07Hades);
+        itineraryVisited.push(n07HadesVisited);
+        text.push(text07);
+
+        // Episode 08 - Sirens
+        var n08Sirens = this.physics.add.staticImage(620, 330, 'n08Sirens');
+        var n08SirensVisted = this.physics.add.staticImage(640, 340, 
+            'n08SirensVisted');
+        n08SirensVisted.disableBody(true, true);
+        var text08 = this.add.text(600, 290, 'Sirens', 
+            { fontSize: '24px', fill: '#000'});
+        text08.visible = 0;
+        itinerary.push(n08Sirens);
+        itineraryVisited.push(n08SirensVisted);
+        text.push(text08);
+
+        // Episode 09 - Scylla and Charybdis
+        var n09Scylla = this.physics.add.staticImage(680, 450, 'n09Scylla');
+        var n09ScyllaVisited = this.physics.add.staticImage(700, 450, 
+            'n09ScyllaVisited');
+        n09ScyllaVisited.disableBody(true, true);
+        var text09 = this.add.text(700, 470, 'Scylla &\nCharybdis', 
+            { fontSize: '24px', fill: '#000'});
+        text09.visible = 0;
+        itinerary.push(n09Scylla);
+        itineraryVisited.push(n09ScyllaVisited);
+        text.push(text09);
+
+        // Episode 10 - The Cattle of Helios
+        var n10Helios = this.physics.add.staticImage(710, 540, 'n10Helios');
+        var n10HeliosVisited = this.physics.add.staticImage(710, 540, 
+            'n10HeliosVisited');
+        n10HeliosVisited.disableBody(true, true);
+        var text10 = this.add.text(640, 580, 'Cattle of Helios', 
+            { fontSize: '24px', fill: '#000'});
+        text10.visible = 0;
+        itinerary.push(n10Helios);
+        itineraryVisited.push(n10HeliosVisited);
+        text.push(text10);
+
+        // Episode 11 - The Cattle of Helios
+        var n11Calypso = this.physics.add.staticImage(520, 550, 'n11Calypso');
+        var n11CalypsoVisited = this.physics.add.staticImage(510, 550, 
+            'n11CalypsoVisited');
+        n11CalypsoVisited.disableBody(true, true);
+        var text11 = this.add.text(370, 560, 'Calypso', 
+            { fontSize: '24px', fill: '#000'});
+        text11.visible = 0;
+        itinerary.push(n11Calypso);
+        itineraryVisited.push(n11CalypsoVisited);
+        text.push(text11);
+
+        // Episode 12 - The Phaiakians
+        var n12Phaiakians = this.physics.add.staticImage(750, 340, 'n12Phaiakians');
+        var n12PhaiakiansVisited = this.physics.add.staticImage(770, 340, 
+            'n12PhaiakiansVisited');
+        n12PhaiakiansVisited.disableBody(true, true);
+        var text12 = this.add.text(750, 290, 'Phaiakians', 
+            { fontSize: '24px', fill: '#000'});
+        text12.visible = 0;
+        itinerary.push(n12Phaiakians);
+        itineraryVisited.push(n12PhaiakiansVisited);
+        text.push(text12);
+
+        // Finale
+        var ithakaVisited = this.physics.add.staticImage(790, 420, 
+            'ithakaVisited');
+        ithakaVisited.disableBody(true, true);
+        var textIthaka = this.add.text(830, 420, 'Ithaka', 
+            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        textIthaka.visible = 0;
+        itineraryVisited.push(ithakaVisited);
+        text.push(textIthaka);
 
 // ------------------------------ Player --------------------------------------
 
@@ -284,10 +472,12 @@
 // ------------------- Right Answers, Wrong Answers ---------------------------
 
         youWereRightText = this.add.text(910, 570, youWereRight, 
-            { fontSize: '36px', fontStyle:'bold', fill: '#000' });
+            { fontSize: '36px', fontStyle:'bold', fill: '#ffcc5c', 
+            stroke:"#000", strokeThickness:'1' });
         youWereRightText.setAlpha(0);
         youWereWrongText = this.add.text(910, 570, youWereWrong, 
-            { fontSize: '36px', fontStyle:'bold', fill: '#000' });
+            { fontSize: '36px', fontStyle:'bold', fill: '#ae0001',
+            stroke:"#000", strokeThickness:'1'});
         youWereWrongText.setAlpha(0);
 
 // --------------------------------- Score ------------------------------------
@@ -339,7 +529,7 @@
             key: 'stopped',
             frames: [ { key: 'ship', frame: 10 } ],
             frameRate: 20,
-        });
+        }); 
 
 // ---------------------------------- Input -----------------------------------
 
@@ -367,6 +557,22 @@
         this.physics.add.overlap(player, n03Cyclops, dock, null, this);
         // Episode 04
         this.physics.add.overlap(player, n04Aiolos, dock, null, this);
+        // Episode 05
+        this.physics.add.overlap(player, n05Laistrygones, dock, null, this);
+        // Episode 06
+        this.physics.add.overlap(player, n06Circe, dock, null, this);
+        // Episode 07
+        this.physics.add.overlap(player, n07Hades, dock, null, this);
+        // Episode 08
+        this.physics.add.overlap(player, n08Sirens, dock, null, this);
+        // Episode 09
+        this.physics.add.overlap(player, n09Scylla, dock, null, this);
+        // Episode 10
+        this.physics.add.overlap(player, n10Helios, dock, null, this);
+        // Episode 11
+        this.physics.add.overlap(player, n11Calypso, dock, null, this);
+        // Episode 12
+        this.physics.add.overlap(player, n12Phaiakians, dock, null, this);
 
     }
 
@@ -442,8 +648,8 @@
                 storyButton1 = this.add.image(-370, -70, 'choice');
                 storyChoice1_Text = this.add.text(-300, -105, storyChoice1, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-                storyButton2 = this.add.image(-370, 30, 'choice');
-                storyChoice2_Text = this.add.text(-300, -5, storyChoice2, 
+                storyButton2 = this.add.image(-370, 50, 'choice');
+                storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
                     { fontSize: '24px', fontStyle:'bold', fill: '#000'});
 
                 storyButton1.setInteractive();
@@ -498,6 +704,33 @@
             storyNumber++;
             stationNumber++;
         }
+
+        if (stationNumber == 13) {
+            // Finale
+            var ithaka = this.physics.add.staticImage(770, 420, 'ithaka');
+            itinerary.push(ithaka);
+            this.physics.add.overlap(player, ithaka, dock, null, this);
+        }
+
+        if (stationNumber == 14) {
+            var gameOverText1 = this.add.text(16, 100, 'After many adventures,', 
+                { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
+                stroke:"#000", strokeThickness:'1' });
+            var gameOverText2 = this.add.text(16, 130, 'thanks to your wit', 
+                { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
+                stroke:"#000", strokeThickness:'1' });
+            var gameOverText3 = this.add.text(16, 160, 'and some help from the Gods,', 
+                { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
+                stroke:"#000", strokeThickness:'1' });
+            var gameOverText4 = this.add.text(16, 190, 'you are finally home!', 
+                { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
+                stroke:"#000", strokeThickness:'1' });
+            var gameOverText5 = this.add.text(16, 250, 'To be continued...', 
+                { fontSize: '32px', fontStyle:'bold', fill: '#ffcc5c',
+                stroke:"#000", strokeThickness:'1' });
+
+            var gameOverImage = this.add.image(190, 450, 'gameOver');
+        }
     }
 
     // Next paragraph
@@ -528,8 +761,8 @@
         storyButton1 = this.add.image(-370, -70, 'choice');
         storyChoice1_Text = this.add.text(-300, -105, storyChoice1, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        storyButton2 = this.add.image(-370, 30, 'choice');
-        storyChoice2_Text = this.add.text(-300, -5, storyChoice2, 
+        storyButton2 = this.add.image(-370, 50, 'choice');
+        storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
             { fontSize: '24px', fontStyle:'bold', fill: '#000'});
 
         storyButton1.setInteractive();
@@ -587,6 +820,9 @@
         storyText.setText(stories[storyNumber]);
         storyChoice1_Text.setText(storyChoices1[storyNumber]);
         storyChoice2_Text.setText(storyChoices2[storyNumber]);
+    }
+
+    function GameOver() {
     }
 
 // ------------------------------ Effects -------------------------------------
