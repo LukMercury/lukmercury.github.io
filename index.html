@@ -58,8 +58,8 @@
     var story = "Just Started";
     var menu;
     var menuBack;
-    var exitButton;             // "Exit" button
-    var nextButton;             // "Next" button
+    var exitButton;             
+    var nextButton;             
     var wrongPlace = "Oh, poor Odysseus, you have lost your way!\nMay Athene guide you!"
     var athene;
     var storyText;
@@ -191,8 +191,14 @@
         2, 1, 2, 2, 1, 1, 1, 2, 1, 2, 2, 2, 2 ];
 
     // Know where to stop the storyline for each place
-    var placeLastStory = [ 0, 3, 5, 10, 12, 14, 16, 18, 22, 23, 24, 25, 28, 
-        29, ];
+    // Number of stories per place
+    var storiesPerPlaceNo = [ 1, 3, 2, 5, 2, 2, 2, 2, 4, 1, 1, 1, 3, 1];
+    // Generate stopping index for each place
+    var placeLastStory = [];
+    placeLastStory[0] = 0;
+    for (i = 1; i < storiesPerPlaceNo.length; i++) {
+        placeLastStory[i] = placeLastStory[i-1] + storiesPerPlaceNo[i];
+    }
 
     // Game
     var game = new Phaser.Game(config);
@@ -205,6 +211,7 @@
 // ------------------------------ Game ----------------------------------------
 
         this.load.image('map', 'assets/map.png');
+        this.load.image('place', 'assets/star.png');
         this.load.spritesheet('ship', 'assets/ship.png', 
             { frameWidth: 96, frameHeight: 96 });
         this.load.image('menuBack', 'assets/menu_Background.png');
@@ -216,50 +223,33 @@
 // ----------------------------- Episodes -------------------------------------
 
         // Episode 00
-        this.load.image('n00Troy', 'assets/star.png');
         this.load.image('n00TroyVisited', 'assets/troy.png');
         // Episode 01
-        this.load.image('n01Cicones', 'assets/star.png');
         this.load.image('n01CiconesVisited', 'assets/cicones.png');
         // Episode 02
-        this.load.image('n02Lotus', 'assets/star.png');
         this.load.image('n02LotusVisited', 'assets/lotus.png');
         // Episode 03
-        this.load.image('n03Cyclops', 'assets/star.png');
         this.load.image('n03CyclopsVisited', 'assets/cyclops.png');
         // Episode 04
-        this.load.image('n04Aiolos', 'assets/star.png');
         this.load.image('n04AiolosVisited', 'assets/aiolos.png');
         // Episode 05
-        this.load.image('n05Laistrygones', 'assets/star.png');
         this.load.image('n05LaistrygonesVisited', 'assets/laistrygones.png');
         // Episode 06
-        this.load.image('n06Circe', 'assets/star.png');
         this.load.image('n06CirceVisited', 'assets/pig.png');
         // Episode 07
-        this.load.image('n07Hades', 'assets/star.png');
         this.load.image('n07HadesVisited', 'assets/hades.png');
         // Episode 08
-        this.load.image('n08Sirens', 'assets/star.png');
         this.load.image('n08SirensVisted', 'assets/sirens.png');
         // Episode 09
-        this.load.image('n09Scylla', 'assets/star.png');
         this.load.image('n09ScyllaVisited', 'assets/scylla.png');
         // Episode 10
-        this.load.image('n10Helios', 'assets/star.png');
         this.load.image('n10HeliosVisited', 'assets/bull.png');
         // Episode 11
-        this.load.image('n11Calypso', 'assets/star.png');
         this.load.image('n11CalypsoVisited', 'assets/calypso.png');
         // Episode 12
-        this.load.image('n12Phaiakians', 'assets/star.png');
         this.load.image('n12PhaiakiansVisited', 'assets/phaiakians.png');
         // Finale
-        this.load.image('ithaka', 'assets/star.png');
         this.load.image('ithakaVisited', 'assets/ithaka.png');
-        // Game Over
-        this.load.image('gameOver', 'assets/athene.png');
-
     }
 
 // =============================== Create =====================================
@@ -283,171 +273,64 @@
 
 
         // Episode 00 - Troy
-        var n00Troy = this.physics.add.staticImage(940, 300, 'n00Troy');
-        var n00TroyVisited = this.physics.add.staticImage(960, 300, 
-            'n00TroyVisited');
-        n00TroyVisited.disableBody(true, true);
-        var text00 = this.add.text(1015, 290, 'Troy', 
-            { fontSize: '24px', fill: '#000'});
-        text00.visible = 0;
-        // Add place to itinerary
-        itinerary.push(n00Troy);
-        itineraryVisited.push(n00TroyVisited);
-        text.push(text00);
+        createPlace.call(this, 940, 300, 'place', 960, 300, 'n00TroyVisited',
+            1015, 290, 'Troy');
 
         // Episode 01 - Cicones
-        var n01Cicones = this.physics.add.staticImage(920, 250, 'n01Cicones');
-        var n01CiconesVisited = this.physics.add.staticImage(910, 220, 
-            'n01CiconesVisited');
-        n01CiconesVisited.disableBody(true, true);
-        var text01 = this.add.text(770, 230, 'Cicones', 
-            { fontSize: '24px', fill: '#000'});
-        text01.visible = 0;
-        itinerary.push(n01Cicones);
-        itineraryVisited.push(n01CiconesVisited);
-        text.push(text01);
+        createPlace.call(this, 920, 250, 'place', 910, 220, 'n01CiconesVisited',
+            770, 230, 'Cicones');
 
         // Episode 02 - Lotus Eaters
-        var n02Lotus = this.physics.add.staticImage(480, 640, 'n02Lotus');
-        var n02LotusVisited = this.physics.add.staticImage(470, 640, 
-            'n02LotusVisited');
-        n02LotusVisited.disableBody(true, true);
-        var text02 = this.add.text(330, 680, 'Lotophagues', 
-            { fontSize: '24px', fill: '#000'});
-        text02.visible = 0;
-        itinerary.push(n02Lotus);
-        itineraryVisited.push(n02LotusVisited);
-        text.push(text02);
+        createPlace.call(this, 480, 640, 'place', 470, 640, 'n02LotusVisited',
+            330, 680, 'Lotophagues');
 
         // Episode 03 - Polyphemus the Cyclops
-        var n03Cyclops = this.physics.add.staticImage(620, 490, 'n03Cyclops');
-        var n03CyclopsVisited = this.physics.add.staticImage(620, 450, 
-            'n03CyclopsVisited');
-        n03CyclopsVisited.disableBody(true, true);
-        var text03 = this.add.text(570, 375, 'Polyphemus', 
-            { fontSize: '24px', fill: '#000'});
-        text03.visible = 0;
-        itinerary.push(n03Cyclops);
-        itineraryVisited.push(n03CyclopsVisited);
-        text.push(text03);
+        createPlace.call(this, 620, 490, 'place', 620, 450, 'n03CyclopsVisited',
+            570, 375, 'Polyphemus');
 
         // Episode 04 - Aiolos
-        var n04Aiolos = this.physics.add.staticImage(510, 430, 'n04Aiolos');
-        var n04AiolosVisited = this.physics.add.staticImage(500, 410, 
-            'n04AiolosVisited');
-        n04AiolosVisited.disableBody(true, true);
-        var text04 = this.add.text(440, 460, 'Aiolos', 
-            { fontSize: '24px', fill: '#000'});
-        text04.visible = 0;
-        itinerary.push(n04Aiolos);
-        itineraryVisited.push(n04AiolosVisited);
-        text.push(text04);
+        createPlace.call(this, 510, 430, 'place', 500, 410, 'n04AiolosVisited',
+            440, 460, 'Aiolos');
 
         // Episode 05 - Laistrygones
-        var n05Laistrygones = this.physics.add.staticImage(540, 170, 'n05Laistrygones');
-        var n05LaistrygonesVisited = this.physics.add.staticImage(560, 150, 
-            'n05LaistrygonesVisited');
-        n05LaistrygonesVisited.disableBody(true, true);
-        var text05 = this.add.text(550, 90, 'Laistrygones', 
-            { fontSize: '24px', fill: '#000'});
-        text05.visible = 0;
-        itinerary.push(n05Laistrygones);
-        itineraryVisited.push(n05LaistrygonesVisited);
-        text.push(text05);
+        createPlace.call(this, 540, 170, 'place', 560, 150, 'n05LaistrygonesVisited',
+            560, 150, 'Laistrygones');
 
         // Episode 06 - Circe
-        var n06Circe = this.physics.add.staticImage(480, 150, 'n06Circe');
-        var n06CirceVisited = this.physics.add.staticImage(480, 170, 
-            'n06CirceVisited');
-        n06CirceVisited.disableBody(true, true);
-        var text06 = this.add.text(400, 195, 'Circe', 
-            { fontSize: '24px', fill: '#000'});
-        text06.visible = 0;
-        itinerary.push(n06Circe);
-        itineraryVisited.push(n06CirceVisited);
-        text.push(text06);
+        createPlace.call(this, 480, 150, 'place', 480, 170, 'n06CirceVisited',
+            400, 195, 'Circe');
 
         // Episode 07 - Hades
-        var n07Hades = this.physics.add.staticImage(495, 70, 'n07Hades');
-        var n07HadesVisited = this.physics.add.staticImage(480, 40, 
-            'n07HadesVisited');
-        n07HadesVisited.disableBody(true, true);
-        var text07 = this.add.text(360, 20, 'Hades', 
-            { fontSize: '24px', fill: '#000'});
-        text07.visible = 0;
-        itinerary.push(n07Hades);
-        itineraryVisited.push(n07HadesVisited);
-        text.push(text07);
+        createPlace.call(this, 495, 70, 'place', 480, 40, 'n07HadesVisited',
+            360, 20, 'Hades');
 
         // Episode 08 - Sirens
-        var n08Sirens = this.physics.add.staticImage(620, 330, 'n08Sirens');
-        var n08SirensVisted = this.physics.add.staticImage(640, 340, 
-            'n08SirensVisted');
-        n08SirensVisted.disableBody(true, true);
-        var text08 = this.add.text(600, 290, 'Sirens', 
-            { fontSize: '24px', fill: '#000'});
-        text08.visible = 0;
-        itinerary.push(n08Sirens);
-        itineraryVisited.push(n08SirensVisted);
-        text.push(text08);
+        createPlace.call(this, 620, 330, 'place', 640, 340, 'n08SirensVisted',
+            600, 290, 'Sirens');
 
         // Episode 09 - Scylla and Charybdis
-        var n09Scylla = this.physics.add.staticImage(680, 450, 'n09Scylla');
-        var n09ScyllaVisited = this.physics.add.staticImage(700, 450, 
-            'n09ScyllaVisited');
-        n09ScyllaVisited.disableBody(true, true);
-        var text09 = this.add.text(700, 470, 'Scylla &\nCharybdis', 
-            { fontSize: '24px', fill: '#000'});
-        text09.visible = 0;
-        itinerary.push(n09Scylla);
-        itineraryVisited.push(n09ScyllaVisited);
-        text.push(text09);
+        createPlace.call(this, 680, 450, 'place', 700, 450, 'n09ScyllaVisited',
+            700, 470, 'Scylla &\nCharybdis');
 
         // Episode 10 - The Cattle of Helios
-        var n10Helios = this.physics.add.staticImage(710, 540, 'n10Helios');
-        var n10HeliosVisited = this.physics.add.staticImage(710, 540, 
-            'n10HeliosVisited');
-        n10HeliosVisited.disableBody(true, true);
-        var text10 = this.add.text(640, 580, 'Cattle of Helios', 
-            { fontSize: '24px', fill: '#000'});
-        text10.visible = 0;
-        itinerary.push(n10Helios);
-        itineraryVisited.push(n10HeliosVisited);
-        text.push(text10);
+        createPlace.call(this, 710, 540, 'place', 710, 540, 'n10HeliosVisited',
+            640, 580, 'Cattle of Helios');
 
         // Episode 11 - The Cattle of Helios
-        var n11Calypso = this.physics.add.staticImage(520, 550, 'n11Calypso');
-        var n11CalypsoVisited = this.physics.add.staticImage(510, 550, 
-            'n11CalypsoVisited');
-        n11CalypsoVisited.disableBody(true, true);
-        var text11 = this.add.text(370, 560, 'Calypso', 
-            { fontSize: '24px', fill: '#000'});
-        text11.visible = 0;
-        itinerary.push(n11Calypso);
-        itineraryVisited.push(n11CalypsoVisited);
-        text.push(text11);
+        createPlace.call(this, 520, 550, 'place', 510, 550, 'n11CalypsoVisited',
+            370, 560, 'Calypso');
 
         // Episode 12 - The Phaiakians
-        var n12Phaiakians = this.physics.add.staticImage(750, 340, 'n12Phaiakians');
-        var n12PhaiakiansVisited = this.physics.add.staticImage(770, 340, 
-            'n12PhaiakiansVisited');
-        n12PhaiakiansVisited.disableBody(true, true);
-        var text12 = this.add.text(750, 290, 'Phaiakians', 
-            { fontSize: '24px', fill: '#000'});
-        text12.visible = 0;
-        itinerary.push(n12Phaiakians);
-        itineraryVisited.push(n12PhaiakiansVisited);
-        text.push(text12);
-
+        createPlace.call(this, 750, 340, 'place', 770, 340, 'n12PhaiakiansVisited',
+            750, 290, 'Phaiakians');
         // Finale
-        var ithakaVisited = this.physics.add.staticImage(790, 420, 
-            'ithakaVisited');
-        ithakaVisited.disableBody(true, true);
-        var textIthaka = this.add.text(830, 420, 'Ithaka', 
-            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        textIthaka.visible = 0;
-        itineraryVisited.push(ithakaVisited);
-        text.push(textIthaka);
+        createPlace.call(this, 770, 420, 'place', 790, 420, 'ithakaVisited',
+            830, 420, 'Ithaka');
+        // Ithaka is the most important
+        text[text.length - 1].setFontStyle('bold');
+        // Hide Ithaka until the course is complete
+        itinerary[itinerary.length - 1].disableBody();
+        itinerary[itinerary.length - 1].setAlpha(0);
 
 // ------------------------------ Player --------------------------------------
 
@@ -457,17 +340,57 @@
 
         menu = this.add.container(600, 400);
         menuBack = this.add.image(0, 0, 'menuBack');
-        exitButton = this.add.image(370, 270, 'exit');
+        exitButton = this.add.image(370, 270, 'exit'); 
+        nextButton = this.add.image(-370, 270, 'next');
+        storyButton1 = this.add.image(-370, -70, 'choice');
+        storyButton2 = this.add.image(-370, 50, 'choice');
 
-        menu.add([ menuBack, exitButton ]);
         menu.setAlpha(0);
         exitButton.setInteractive();
+        nextButton.setAlpha(0);
+        nextButton.setInteractive();
+        storyButton1.setAlpha(0);
+        storyButton1.setInteractive();
+        storyButton2.setAlpha(0);
+        storyButton2.setInteractive();
 
         exitButton.on('clicked', sail, this);
         exitButton.on('pointerover', 
             function () { exitButton.setTint(0xfeffa3); }, this);
         exitButton.on('pointerout', 
             function () { exitButton.clearTint(); }, this);
+        nextButton.on('clicked', next, this);
+        nextButton.on('pointerover', 
+            function () { nextButton.setTint(0xfeffa3); }, this);
+        nextButton.on('pointerout', 
+            function () { nextButton.clearTint(); }, this);
+        storyButton1.on('clicked', validate1, this);
+        storyButton1.on('pointerover', 
+            function () { storyButton1.setTint(0xff6f69); }, this);
+            storyButton1.on('pointerout', 
+            function () { storyButton1.clearTint(); }, this);
+        storyButton2.on('clicked', validate2, this);
+        storyButton2.on('pointerover', 
+            function () { storyButton2.setTint(0xff6f69); }, this);
+        storyButton2.on('pointerout', 
+            function () { storyButton2.clearTint(); }, this);
+
+        storyText = this.add.text(-370, -270, story, 
+            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        storyText.setAlpha(0);
+        storyChoice1_Text = this.add.text(-300, -105, storyChoice1, 
+            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        storyChoice1_Text.setAlpha(0);
+        storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
+            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
+        storyChoice2_Text.setAlpha(0);
+
+        athene = this.add.image(0, 0, 'athene');
+        athene.setAlpha(0);
+
+        menu.add([ menuBack, exitButton, nextButton, storyButton1, storyButton2,
+        storyText, storyChoice1_Text, storyChoice2_Text, athene ]);
+
 
 // ------------------- Right Answers, Wrong Answers ---------------------------
 
@@ -547,33 +470,9 @@
 // ----------------------------- Collisions -----------------------------------
 
         // One for each place
-        // Episode 00
-        this.physics.add.overlap(player, n00Troy, dock, null, this);
-        // Episode 01
-        this.physics.add.overlap(player, n01Cicones, dock, null, this);
-        // Episode 02
-        this.physics.add.overlap(player, n02Lotus, dock, null, this);
-        // Episode 03
-        this.physics.add.overlap(player, n03Cyclops, dock, null, this);
-        // Episode 04
-        this.physics.add.overlap(player, n04Aiolos, dock, null, this);
-        // Episode 05
-        this.physics.add.overlap(player, n05Laistrygones, dock, null, this);
-        // Episode 06
-        this.physics.add.overlap(player, n06Circe, dock, null, this);
-        // Episode 07
-        this.physics.add.overlap(player, n07Hades, dock, null, this);
-        // Episode 08
-        this.physics.add.overlap(player, n08Sirens, dock, null, this);
-        // Episode 09
-        this.physics.add.overlap(player, n09Scylla, dock, null, this);
-        // Episode 10
-        this.physics.add.overlap(player, n10Helios, dock, null, this);
-        // Episode 11
-        this.physics.add.overlap(player, n11Calypso, dock, null, this);
-        // Episode 12
-        this.physics.add.overlap(player, n12Phaiakians, dock, null, this);
-
+        for (i = 0; i < itinerary.length; i++) {
+            this.physics.add.overlap(player, itinerary[i], dock, null, this);
+        }
     }
 
 // ================================ Update ====================================    
@@ -615,6 +514,23 @@
 
 // ============================ Functions =====================================
 
+    // Create new place (create() section)
+    function createPlace(xPl, yPl, image1, xVisited, yVisited, image2,
+        xText, yText, textString) {
+        // Create place
+        var place = this.physics.add.staticImage(xPl, yPl, image1);
+        var placeVisited = this.physics.add.staticImage(xVisited, yVisited,
+            image2);
+        placeVisited.disableBody(true, true);
+        var placeText = this.add.text(xText, yText, textString, 
+            { fontSize: '24px', fill: '#000' });
+        placeText.visible = 0;
+        // Add place to itinerary
+        itinerary.push(place);
+        itineraryVisited.push(placeVisited);
+        text.push(placeText);
+    }
+
     // Arrive at place
     function dock(player, place)
     {
@@ -632,40 +548,8 @@
                 firstVisit[idx] = false;
 
                 if (storyNumber < placeLastStory[stationNumber]) {
-                    nextButton = this.add.image(-370, 270, 'next');
-
-                    nextButton.setInteractive();
-                    nextButton.on('clicked', next, this);
-                    nextButton.on('pointerover', 
-                        function () { nextButton.setTint(0xfeffa3); }, this);
-                    nextButton.on('pointerout', 
-                        function () { nextButton.clearTint(); }, this);
-                    menu.add([ nextButton ]);
+                    nextButton.setAlpha(1);
                 }
-
-                storyText = this.add.text(-370, -270, story, 
-                    { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-                storyButton1 = this.add.image(-370, -70, 'choice');
-                storyChoice1_Text = this.add.text(-300, -105, storyChoice1, 
-                    { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-                storyButton2 = this.add.image(-370, 50, 'choice');
-                storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
-                    { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-
-                storyButton1.setInteractive();
-                storyButton1.on('clicked', validate1, this);
-                storyButton1.on('pointerover', 
-                    function () { storyButton1.setTint(0xff6f69); }, this);
-                storyButton1.on('pointerout', 
-                    function () { storyButton1.clearTint(); }, this);
-                storyButton2.setInteractive();
-                storyButton2.on('clicked', validate2, this);
-                storyButton2.on('pointerover', 
-                    function () { storyButton2.setTint(0xff6f69); }, this);
-                storyButton2.on('pointerout', 
-                    function () { storyButton2.clearTint(); }, this);
-                menu.add([ storyText, storyButton1, storyChoice1_Text, 
-                   storyButton2, storyChoice2_Text ]);
 
                 setStory();
 
@@ -677,16 +561,37 @@
                     scoreText.setText('Score: ' + score);
                     firstVisit[idx] = false;
 
-                    storyText = this.add.text(-370, -270, story, 
-                        { fontSize: '24px', fontStyle:'bold', fill: '#000'});
                     storyText.setText(wrongPlace);
-                    athene = this.add.image(0, 0, 'athene');
+                    storyText.setAlpha(1);
+                    athene.setAlpha(1);
 
-                    menu.add([ storyText, athene ]);
                     menu.setAlpha(0.8);
                 }
             }
         }
+    } 
+
+     // Next paragraph
+    function next() {
+        menu.setAlpha(0);
+        youWereRightText.setAlpha(0);
+        youWereWrongText.setAlpha(0);
+        nextButton.setAlpha(0);
+        storyButton1.setAlpha(0);
+        storyButton2.setAlpha(0);
+        storyChoice1_Text.setAlpha(0);
+        storyChoice2_Text.setAlpha(0);
+
+        blockInput = false;
+        storyNumber++;
+
+        if (storyNumber < placeLastStory[stationNumber]) {
+            nextButton.setAlpha(1);
+        }
+
+        setStory();
+
+        menu.setAlpha(0.8);
     }
 
     // Leave place
@@ -694,8 +599,12 @@
         menu.setAlpha(0);
         youWereRightText.setAlpha(0);
         youWereWrongText.setAlpha(0);
-        menu.remove([ nextButton, storyText, storyButton1, storyChoice1_Text, 
-            storyButton2, storyChoice2_Text, athene ]);
+        nextButton.setAlpha(0);
+        storyButton1.setAlpha(0);
+        storyButton2.setAlpha(0);
+        storyChoice1_Text.setAlpha(0);
+        storyChoice2_Text.setAlpha(0);
+        athene.setAlpha(0);
         blockInput = false;
         blockDocking = false;
 
@@ -707,82 +616,13 @@
 
         if (stationNumber == 13) {
             // Finale
-            var ithaka = this.physics.add.staticImage(770, 420, 'ithaka');
-            itinerary.push(ithaka);
-            this.physics.add.overlap(player, ithaka, dock, null, this);
+            itinerary[itinerary.length - 1].setAlpha(1);
+            itinerary[itinerary.length - 1].enableBody();
         }
 
         if (stationNumber == 14) {
-            var gameOverText1 = this.add.text(16, 100, 'After many adventures,', 
-                { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
-                stroke:"#000", strokeThickness:'1' });
-            var gameOverText2 = this.add.text(16, 130, 'thanks to your wit', 
-                { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
-                stroke:"#000", strokeThickness:'1' });
-            var gameOverText3 = this.add.text(16, 160, 'and some help from the Gods,', 
-                { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
-                stroke:"#000", strokeThickness:'1' });
-            var gameOverText4 = this.add.text(16, 190, 'you are finally home!', 
-                { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
-                stroke:"#000", strokeThickness:'1' });
-            var gameOverText5 = this.add.text(16, 250, 'To be continued...', 
-                { fontSize: '32px', fontStyle:'bold', fill: '#ffcc5c',
-                stroke:"#000", strokeThickness:'1' });
-
-            var gameOverImage = this.add.image(190, 450, 'gameOver');
+            gameOver.call(this);
         }
-    }
-
-    // Next paragraph
-    function next() {
-        menu.setAlpha(0);
-        youWereRightText.setAlpha(0);
-        youWereWrongText.setAlpha(0);
-        menu.remove([ nextButton, storyText, storyButton1, storyChoice1_Text, 
-            storyButton2, storyChoice2_Text ]);
-
-        blockInput = false;
-        storyNumber++;
-
-        if (storyNumber < placeLastStory[stationNumber]) {
-            nextButton = this.add.image(-370, 270, 'next');
-
-            nextButton.setInteractive();
-            nextButton.on('clicked', next, this);
-            nextButton.on('pointerover', 
-                function () { nextButton.setTint(0xfeffa3); }, this);
-            nextButton.on('pointerout', 
-                function () { nextButton.clearTint(); }, this);
-            menu.add([ nextButton ]);
-        }
-
-        storyText = this.add.text(-370, -270, story, 
-            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        storyButton1 = this.add.image(-370, -70, 'choice');
-        storyChoice1_Text = this.add.text(-300, -105, storyChoice1, 
-            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-        storyButton2 = this.add.image(-370, 50, 'choice');
-        storyChoice2_Text = this.add.text(-300, 15, storyChoice2, 
-            { fontSize: '24px', fontStyle:'bold', fill: '#000'});
-
-        storyButton1.setInteractive();
-        storyButton1.on('clicked', validate1, this);
-        storyButton1.on('pointerover', 
-            function () { storyButton1.setTint(0xff6f69); }, this);
-        storyButton1.on('pointerout', 
-            function () { storyButton1.clearTint(); }, this);
-        storyButton2.setInteractive();
-        storyButton2.on('clicked', validate2, this);
-        storyButton2.on('pointerover', 
-            function () { storyButton2.setTint(0xff6f69); }, this);
-            storyButton2.on('pointerout', 
-            function () { storyButton2.clearTint(); }, this);
-        menu.add([ storyText, storyButton1, storyChoice1_Text, 
-            storyButton2, storyChoice2_Text ]);
-
-        setStory();
-
-        menu.setAlpha(0.8);
     }
 
     // Right choice
@@ -816,10 +656,37 @@
         else wrong();
     }
 
+    // Set and display next story 
     function setStory() {
+        storyButton1.setAlpha(1);
+        storyButton2.setAlpha(2);
         storyText.setText(stories[storyNumber]);
         storyChoice1_Text.setText(storyChoices1[storyNumber]);
         storyChoice2_Text.setText(storyChoices2[storyNumber]);
+        storyText.setAlpha(1);
+        storyChoice1_Text.setAlpha(1);
+        storyChoice2_Text.setAlpha(1);
+    }
+
+    // Game Over
+    function gameOver() {
+        var gameOverText1 = this.add.text(16, 100, 'After many adventures,', 
+            { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
+            stroke:"#000", strokeThickness:'1' });
+        var gameOverText2 = this.add.text(16, 130, 'thanks to your wit', 
+            { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
+            stroke:"#000", strokeThickness:'1' });
+        var gameOverText3 = this.add.text(16, 160, 'and some help from the Gods,', 
+            { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
+            stroke:"#000", strokeThickness:'1' });
+        var gameOverText4 = this.add.text(16, 190, 'you are finally home!', 
+            { fontSize: '24px', fontStyle:'bold', fill: '#ffcc5c',
+            stroke:"#000", strokeThickness:'1' });
+        var gameOverText5 = this.add.text(16, 250, 'To be continued...', 
+            { fontSize: '32px', fontStyle:'bold', fill: '#ffcc5c',
+            stroke:"#000", strokeThickness:'1' });
+
+        var gameOverImage = this.add.image(190, 450, 'athene');
     }
 
 </script>
