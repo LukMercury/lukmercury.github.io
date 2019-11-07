@@ -364,12 +364,12 @@
             function () { nextButton.setTint(0xfeffa3); }, this);
         nextButton.on('pointerout', 
             function () { nextButton.clearTint(); }, this);
-        storyButton1.on('clicked', validate1, this);
+        storyButton1.on('clicked', validate.bind(this, 1), this);
         storyButton1.on('pointerover', 
             function () { storyButton1.setTint(0xff6f69); }, this);
             storyButton1.on('pointerout', 
             function () { storyButton1.clearTint(); }, this);
-        storyButton2.on('clicked', validate2, this);
+        storyButton2.on('clicked', validate.bind(this, 2), this);
         storyButton2.on('pointerover', 
             function () { storyButton2.setTint(0xff6f69); }, this);
         storyButton2.on('pointerout', 
@@ -646,13 +646,8 @@
     }
 
     // Validate choices
-    function validate1() {
-        if (rightChoices[storyNumber] == 1) right();
-        else wrong();
-    }
-
-    function validate2() {
-        if (rightChoices[storyNumber] == 2) right();
+    function validate() {
+        if (rightChoices[storyNumber] == arguments[0]) right();
         else wrong();
     }
 
