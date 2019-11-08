@@ -70,6 +70,11 @@
     var storyChoice1_Text;
     var storyChoice2_Text;
 
+    var seaBoundary;
+    var prevPos = {
+        x:880,
+        y:330
+    }
     // Map objects (places)
 
     // Player must visit places in the correct order
@@ -267,6 +272,16 @@
         for (i = 0; i < noOfPlaces; i++)
             firstVisit.push(true);
 
+// ----------------------------------------------------------------------------
+
+    var tracePolygon = [ {x:300, y:200}, {x:900, y:200}, {x:900, y:600},
+        {x:300, y:600}];
+    seaBoundary = new Phaser.Geom.Polygon(tracePolygon);
+    for (i = 0; i < tracePolygon.length; i++) {
+        this.add.image(tracePolygon[i].x, tracePolygon[i].y, 'place').setTint(0xff0000);
+    }
+
+
 // --------------------------- Places -----------------------------------------
 // ---------- Add places here and stories above in "Variables" ----------------
 // -------- Don't forget to add collisions at the bottom of "Create" ----------
@@ -334,7 +349,7 @@
 
 // ------------------------------ Player --------------------------------------
 
-        player = this.physics.add.sprite(880, 330, 'ship');
+        player = this.physics.add.sprite(prevPos.x, prevPos.y, 'ship');
 
 // ------------------------------- Menu ---------------------------------------
 
@@ -479,6 +494,7 @@
 
     function update ()
     {
+ 
         if (cursors.left.isDown)
         {
             player.setVelocityX(-160);
@@ -509,6 +525,17 @@
             player.setVelocityY(0);
 
             player.anims.play('stopped');
+        }
+        var isInside = seaBoundary.contains(player.x, player.y);
+        if (isInside) {
+            prevPos = {
+                x:player.x,
+                y:player.y
+            }
+        } else {
+            console.log("is outside");
+            player.x = prevPos.x;
+            player.y = prevPos.y;
         }
     }
 
