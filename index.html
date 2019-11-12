@@ -45,6 +45,14 @@
     var score = 0;
     var scoreText;
 
+    // Keep player within boundary polygon
+    var seaBoundary;
+    // Initial location & keep track of location
+    var prevPos = {
+        x:880,
+        y:330
+    };
+
     // For interactions
     var blockInput = false;
     var blockDocking = false;
@@ -70,11 +78,6 @@
     var storyChoice1_Text;
     var storyChoice2_Text;
 
-    var seaBoundary;
-    var prevPos = {
-        x:880,
-        y:330
-    };
     // Map objects (places)
 
     // Player must visit places in the correct order
@@ -266,20 +269,56 @@
 
         this.add.image(600, 400, 'map');
 
+// -------------------------- Sea boundary polygon ----------------------------
+
+    var tracePolygon = [ {x:93, y:455}, {x:109, y:428}, {x:133, y:423}, 
+        {x:157, y:428}, {x:181, y:434}, {x:202, y:410}, {x:218, y:404},  
+        {x:237, y:367}, {x:250, y:351}, {x:245, y:340}, {x:248, y:316}, 
+        {x:274, y:252}, {x:288, y:228}, {x:320, y:215}, {x:344, y:194}, 
+        {x:346, y:127}, {x:376, y:108}, {x:397, y:114}, {x:410, y:130},  
+        {x:424, y:138}, {x:448, y:111}, {x:461, y:100}, {x:485, y:60},  
+        {x:493, y:60}, {x:506, y:60}, {x:517, y:95}, {x:525, y:130},  
+        {x:538, y:151}, {x:546, y:151}, {x:549, y:162}, {x:552, y:172},  
+        {x:552, y:186}, {x:552, y:194}, {x:589, y:252}, {x:605, y:260},  
+        {x:621, y:279}, {x:632, y:300}, {x:648, y:321}, {x:664, y:388},  
+        {x:653, y:412}, {x:664, y:426}, // Scylla
+        {x:672, y:407}, {x:685, y:362}, {x:669, y:330}, {x:685, y:305},  
+        {x:704, y:311}, {x:717, y:327}, {x:704, y:284}, {x:653, y:239},  
+        {x:661, y:228}, {x:634, y:220}, {x:613, y:183}, {x:600, y:132},  
+        {x:568, y:87}, {x:573, y:55}, {x:595, y:0},{x:573, y:55}, 
+        {x:629, y:85}, {x:749, y:221}, {x:752, y:299}, {x:781, y:373},  
+        {x:816, y:488}, {x:840, y:485}, {x:861, y:432}, {x:861, y:381},  
+        {x:821, y:309}, {x:832, y:288}, {x:872, y:253}, {x:909, y:223},  
+        {x:957, y:231}, {x:989, y:252}, {x:959, y:274}, {x:938, y:354},  
+        {x:957, y:442}, {x:1005, y:479}, {x:1029, y:476}, {x:1029, y:476},  
+        {x:1063, y:442}, {x:1079, y:450}, {x:1098, y:460}, {x:1122, y:450},  
+        {x:1142, y:415}, {x:1151, y:415}, {x:1200, y:415}, {x:1200, y:455},  
+        {x:1200, y:516}, {x:1200, y:690}, {x:1151, y:738}, {x:1103, y:735},   
+        {x:1077, y:730}, {x:1061, y:751}, {x:1034, y:800}, {x:933, y:751},  
+        {x:858, y:735}, {x:850, y:716}, {x:813, y:703}, {x:776, y:751},  
+        {x:776, y:800}, {x:642, y:800}, {x:642, y:751}, {x:584, y:719},    
+        {x:520, y:684}, {x:478, y:639}, {x:525, y:596}, {x:514, y:570},  
+        {x:506, y:548}, {x:512, y:527}, {x:520, y:514}, {x:525, y:498},  
+        {x:514, y:503}, {x:506, y:482}, {x:490, y:479}, {x:418, y:484},  
+        {x:381, y:492}, {x:368, y:484}, {x:346, y:476}, {x:306, y:476},  
+        {x:266, y:482}, {x:234, y:514}, {x:186, y:522}, {x:117, y:500},  
+        ];
+
+    seaBoundary = new Phaser.Geom.Polygon(tracePolygon);
+    /*
+    // Helper
+    for (i = 0; i < tracePolygon.length; i++) {
+        this.add.image(tracePolygon[i].x, tracePolygon[i].y, 'place').setTint(
+            0xff0000);
+    }
+    */
+
+
 // ---------------------------- Map Objects -----------------------------------
         
         // You get a penalty and a warning for stopping in the wrong order
         for (i = 0; i < noOfPlaces; i++)
             firstVisit.push(true);
-
-// ----------------------------------------------------------------------------
-
-    var tracePolygon = [ {x:300, y:200}, {x:900, y:200}, {x:900, y:600},
-        {x:300, y:600}];
-    seaBoundary = new Phaser.Geom.Polygon(tracePolygon);
-    for (i = 0; i < tracePolygon.length; i++) {
-        this.add.image(tracePolygon[i].x, tracePolygon[i].y, 'place').setTint(0xff0000);
-    }
 
 
 // --------------------------- Places -----------------------------------------
@@ -494,7 +533,7 @@
 
     function update ()
     {
- 
+        // Keys
         if (cursors.left.isDown)
         {
             player.setVelocityX(-160);
@@ -526,6 +565,9 @@
 
             player.anims.play('stopped');
         }
+
+        // Keep player inside boundary polygon
+        console.log('{x:' + player.x + ', y:' + player.y + '},');
         var isInside = seaBoundary.contains(player.x, player.y);
         if (isInside) {
             prevPos = {
@@ -533,7 +575,6 @@
                 y:player.y
             }
         } else {
-            console.log("is outside");
             player.x = prevPos.x;
             player.y = prevPos.y;
         }
