@@ -49,6 +49,9 @@
     var seaBoundary;
     var islandBoundary1;
     var islandBoundary2;
+    var isInside = true;
+    var isOutside1 = true;
+    var isOutside2 = true;
     // Initial location & keep track of location
     var prevPos = {
         x:880,
@@ -593,9 +596,9 @@
 
         // console.log('{x:' + player.x + ', y:' + player.y + '},');
         // Keep player inside boundary polygon
-        var isInside = seaBoundary.contains(player.x, player.y);
-        var isOutside1 = !islandBoundary1.contains(player.x, player.y);
-        var isOutside2 = !islandBoundary2.contains(player.x, player.y);
+        isInside = seaBoundary.contains(player.x, player.y);
+        isOutside1 = !islandBoundary1.contains(player.x, player.y);
+        isOutside2 = !islandBoundary2.contains(player.x, player.y);
         if (isInside && isOutside1 && isOutside2) {
             prevPos = {
                 x:player.x,
