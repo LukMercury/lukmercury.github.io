@@ -47,6 +47,8 @@
 
     // Keep player within boundary polygon
     var seaBoundary;
+    var islandBoundary1;
+    var islandBoundary2;
     // Initial location & keep track of location
     var prevPos = {
         x:880,
@@ -309,10 +311,33 @@
     // Helper
     for (i = 0; i < tracePolygon.length; i++) {
         this.add.image(tracePolygon[i].x, tracePolygon[i].y, 'place').setTint(
-            0xff0000);
+         0xff0000);
     }
     */
 
+    var traceIsland1 = [{x:469, y:356}, {x:469, y:282}, {x:490, y:242},  
+        {x:482, y:183}, {x:501, y:180}, {x:504, y:202}, {x:496, y:239},  
+        {x:504, y:290}, {x:493, y:362}, {x:482, y:370} 
+        ]; 
+    islandBoundary1 = new Phaser.Geom.Polygon(traceIsland1);
+    /*
+    // Helper
+    for (i = 0; i < traceIsland1.length; i++) {
+        this.add.image(traceIsland1[i].x, traceIsland1[i].y, 'place').setTint(
+         0xff0000);
+    }
+    */
+    var traceIsland2 = [{x:629, y:436}, {x:642, y:450}, {x:632, y:466},  
+        {x:637, y:484}, {x:610, y:482}, {x:581, y:460}, {x:578, y:439},  
+        ]; 
+    islandBoundary2 = new Phaser.Geom.Polygon(traceIsland2);
+    /*
+    // Helper
+    for (i = 0; i < traceIsland2.length; i++) {
+        this.add.image(traceIsland2[i].x, traceIsland2[i].y, 'place').setTint(
+         0xff0000);
+    }
+    */
 
 // ---------------------------- Map Objects -----------------------------------
         
@@ -566,10 +591,12 @@
             player.anims.play('stopped');
         }
 
+        // console.log('{x:' + player.x + ', y:' + player.y + '},');
         // Keep player inside boundary polygon
-        console.log('{x:' + player.x + ', y:' + player.y + '},');
         var isInside = seaBoundary.contains(player.x, player.y);
-        if (isInside) {
+        var isOutside1 = !islandBoundary1.contains(player.x, player.y);
+        var isOutside2 = !islandBoundary2.contains(player.x, player.y);
+        if (isInside && isOutside1 && isOutside2) {
             prevPos = {
                 x:player.x,
                 y:player.y
