@@ -275,7 +275,7 @@
 
 // -------------------------- Sea boundary polygon ----------------------------
 
-    var tracePolygon = [ {x:93, y:455}, {x:109, y:428}, {x:133, y:423}, 
+    var traceSea = [ {x:93, y:455}, {x:109, y:428}, {x:133, y:423}, 
         {x:157, y:428}, {x:181, y:434}, {x:202, y:410}, {x:218, y:404},  
         {x:237, y:367}, {x:250, y:351}, {x:245, y:340}, {x:248, y:316}, 
         {x:274, y:252}, {x:288, y:228}, {x:320, y:215}, {x:344, y:194}, 
@@ -308,7 +308,7 @@
         {x:266, y:482}, {x:234, y:514}, {x:186, y:522}, {x:117, y:500},  
         ];
 
-    seaBoundary = new Phaser.Geom.Polygon(tracePolygon);
+    seaBoundary = new Phaser.Geom.Polygon(traceSea);
     /*
     // Helper
     for (i = 0; i < tracePolygon.length; i++) {
